@@ -1,7 +1,7 @@
 {
   "name": "廢話農民曆",
   "short_name": "廢話農民曆",
-  "start_url": "./index.html",
+  "start_url": "./chinese_calender.html",
   "display": "standalone",
   "background_color": "#f0f2f5",
   "theme_color": "#2c3e50",
