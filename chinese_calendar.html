@@ -2,25 +2,28 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>廢話農民曆 v1.17 (愛恨分明版)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>廢話農民曆 v1.18</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#2c3e50">
     <link rel="apple-touch-icon" href="potato.png">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
     <script src="https://cdn.jsdelivr.net/npm/lunar-javascript/lunar.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
     <style>
-        body { font-family: "Microsoft JhengHei", "Heiti TC", sans-serif; background-color: #f0f2f5; color: #333; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; overflow-x: hidden; }
+        body { font-family: "Microsoft JhengHei", "Heiti TC", sans-serif; background-color: #f0f2f5; color: #333; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; overflow-x: hidden; touch-action: manipulation; }
         .container { width: 340px; max-width: 90%; position: relative; padding-bottom: 50px; }
         
+        /* 頁面切換 */
         .page { background: white; border-radius: 24px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); text-align: center; display: none; }
         #page-input { padding: 40px 30px; display: block; } 
         #page-result { padding: 0; background: transparent; box-shadow: none; } 
         #page-calendar { padding: 20px; } #page-fortune { padding: 30px 20px; }
 
+        /* 輸入區塊 */
         .input-group { margin-bottom: 15px; text-align: left; }
         .input-row { display: flex; gap: 10px; width: 100%; }
         .input-row input { flex: 1; min-width: 0; }
@@ -28,30 +31,44 @@
         input:focus { border-color: #2c3e50; }
         .label-text { font-size: 14px; color: #666; margin-bottom: 5px; display: block; text-align: left; padding-left: 5px; font-weight: bold;}
 
-        /* 愛恨開關樣式 */
+        /* 關係開關 */
         .relation-switch { display: flex; gap: 10px; margin-top: 5px; }
         .relation-option { flex: 1; }
-        .relation-option input { display: none; } /* 隱藏原生 Radio */
-        .relation-option label { 
-            display: block; padding: 10px; border: 2px solid #eee; border-radius: 10px; 
-            text-align: center; cursor: pointer; font-size: 14px; color: #aaa; transition: 0.2s; 
-        }
-        /* 選中狀態 */
+        .relation-option input { display: none; }
+        .relation-option label { display: block; padding: 10px; border: 2px solid #eee; border-radius: 10px; text-align: center; cursor: pointer; font-size: 14px; color: #aaa; transition: 0.2s; }
         .relation-option input:checked + label.love { border-color: #e84393; background: #fff0f6; color: #e84393; font-weight: bold; }
         .relation-option input:checked + label.hate { border-color: #2c3e50; background: #ecf0f1; color: #2c3e50; font-weight: bold; }
 
+        /* 按鈕 */
         .btn { background-color: #2c3e50; color: white; border: none; border-radius: 12px; padding: 15px 30px; font-size: 16px; font-weight: bold; cursor: pointer; width: 100%; margin-bottom: 10px; transition: 0.2s; }
         .btn:disabled { background-color: #95a5a6; cursor: not-allowed; opacity: 0.7; }
         .btn-fortune { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; box-shadow: 0 4px 15px rgba(118, 75, 162, 0.4); }
         .btn-secondary { background-color: #ecf0f1; color: #7f8c8d; }
         .btn-action { background-color: #e74c3c; } .btn-info { background-color: #3498db; } .btn-outline { background: transparent; border: 2px solid #2c3e50; color: #2c3e50; }
 
+        /* 結果卡片 */
         .result-card { background: #fffdf5; padding: 25px 20px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); border: 6px solid #2c3e50; position: relative; margin-bottom: 15px; text-align: center; overflow: hidden; }
         .result-card::before { content: ""; position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 16px; height: 16px; background: #f0f2f5; border: 6px solid #2c3e50; border-radius: 50%; z-index: 2; }
         .mascot-img { width: 160px; height: 160px; object-fit: contain; margin: 5px auto; display: block; animation: fadeIn 0.5s ease-in; }
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        
+        .card-header { border-bottom: 2px dashed #ccc; padding-bottom: 10px; margin-bottom: 10px; }
+        .card-name { font-size: 20px; font-weight: bold; color: #d35400; margin-bottom: 5px; }
+        .card-date { font-size: 14px; color: #666; } .card-lunar { font-size: 14px; color: #e74c3c; margin-top: 5px; }
+        
         .main-word { font-size: 60px; font-weight: 900; color: #2c3e50; margin: 5px 0; line-height: 1; }
-        .advice-text { font-size: 15px; line-height: 1.6; color: #555; margin-top: 15px; text-align: justify; padding: 15px; background: rgba(0,0,0,0.03); border-radius: 12px; min-height: 60px; }
+        .mood-tag { display: inline-block; background: #2c3e50; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; margin-bottom: 5px; }
+        
+        /* 幸運儀表板樣式 */
+        .lucky-dash { display: flex; justify-content: space-around; margin: 15px 0; background: white; padding: 12px 5px; border-radius: 12px; border: 1px dashed #ccc; font-size: 12px; }
+        .lucky-item { text-align: center; width: 25%; position: relative; }
+        .lucky-item:not(:last-child)::after { content: ""; position: absolute; right: 0; top: 10%; height: 80%; width: 1px; background: #eee; }
+        .lucky-label { color: #aaa; margin-bottom: 3px; font-size: 10px; }
+        .lucky-val { font-weight: bold; font-size: 13px; color: #2c3e50; }
+
+        .advice-text { font-size: 15px; line-height: 1.6; color: #555; margin-top: 10px; text-align: justify; padding: 15px; background: rgba(0,0,0,0.03); border-radius: 12px; min-height: 60px; }
+
+        /* VIP */
         .vip-section { margin-top: 20px; border-top: 2px dashed #d4af37; padding-top: 15px; position: relative; }
         .vip-title { color: #d4af37; font-weight: bold; font-size: 14px; margin-bottom: 15px; display: inline-block; background: #fffdf5; padding: 0 10px; border: 1px solid #d4af37; border-radius: 20px; }
         .vip-content { text-align: left; font-size: 14px; color: #444; line-height: 1.7; filter: blur(6px); user-select: none; transition: all 0.5s; opacity: 0.7; height: 150px; overflow: hidden; }
@@ -59,15 +76,16 @@
         .vip-lock-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; background: rgba(255, 253, 245, 0.7); }
         .btn-unlock { background: linear-gradient(45deg, #f1c40f, #f39c12); color: white; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; box-shadow: 0 4px 10px rgba(243, 156, 18, 0.4); cursor: pointer; animation: pulse 2s infinite; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        
         .bazi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin: 10px 0; background: #fff; padding: 8px; border-radius: 8px; border: 1px solid #eee; }
         .bazi-col { text-align: center; } .bazi-label { font-size: 10px; color: #999; } .bazi-val { font-size: 16px; font-weight: bold; color: #333; }
         .footer-note { font-size: 10px; color: #bbb; margin-top: 15px; text-align: center; letter-spacing: 1px; }
-        .card-header { border-bottom: 2px dashed #ccc; padding-bottom: 10px; margin-bottom: 10px; }
-        .card-name { font-size: 20px; font-weight: bold; color: #d35400; margin-bottom: 5px; }
-        .card-date { font-size: 14px; color: #666; } .card-lunar { font-size: 14px; color: #e74c3c; margin-top: 5px; }
-        .mood-tag { display: inline-block; background: #2c3e50; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; margin-bottom: 5px; }
+
+        /* Loading */
         .loading-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.98); z-index: 20; display: none; flex-direction: column; align-items: center; justify-content: center; border-radius: 24px; }
         .spinner { width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #2c3e50; border-radius: 50%; animation: spin 1s linear infinite; } @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* 其他 */
         .fortune-shaker { font-size: 80px; margin: 30px 0; cursor: pointer; display: inline-block; transition: transform 0.2s; } @keyframes shake { 0% { transform: translate(1px, 1px) rotate(0deg); } 10% { transform: translate(-1px, -2px) rotate(-1deg); } 50% { transform: translate(-1px, 2px) rotate(-1deg); } 100% { transform: translate(1px, -2px) rotate(-1deg); } } .shaking { animation: shake 0.5s; animation-iteration-count: infinite; } 
         .poem-card { background-color: #fff; border: 2px solid #2c3e50; padding: 20px; margin-top: 20px; display: none; animation: slideUp 0.5s ease-out; } @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } } 
         .poem-title { color: #c0392b; font-weight: bold; font-size: 24px; margin-bottom: 10px; border-bottom: 2px solid #c0392b; display: inline-block; padding-bottom: 5px; } .poem-content { font-size: 18px; line-height: 1.8; color: #333; margin: 15px 0; font-family: "KaiTi", "BiauKai", serif; font-weight: bold; } .poem-note { font-size: 12px; color: #888; margin-top: 10px; } 
@@ -135,6 +153,9 @@
             
             <div class="main-word" id="resultWord">...</div>
             <div class="mood-tag" id="resMoodTag">...</div>
+
+            <div id="luckyDashboard"></div>
+
             <div class="advice-text" id="resultAdvice"></div>
             
             <div class="vip-section">
@@ -172,6 +193,7 @@
 
 <script>
     // ===========================================
+    // 請填入你的 API Key
     const GEMINI_API_KEY = "AIzaSyA65QplO1Elk4Lfp6EIton99I_6QsSk560"; 
     // ===========================================
 
@@ -179,6 +201,7 @@
     let calendarViewDate = new Date();
     let isProcessing = false;
 
+    // 圖片對照
     const almanacRules = {
         "開市": { word: "衝", img: "charge" }, "交易": { word: "衝", img: "charge" },
         "入宅": { word: "揪", img: "party" }, "纳采": { word: "揪", img: "party" },
@@ -190,13 +213,11 @@
         "治病": { word: "撐", img: "heavy" }, "安葬": { word: "冷", img: "freeze" },
         "default": { word: "龜", img: "turtle" }
     };
-
     const badDayRules = {
         "出行": { word: "卡", img: "stuck" }, "嫁娶": { word: "冷", img: "freeze" },
         "開市": { word: "雷", img: "shock" }, "動土": { word: "別", img: "stop" },
         "會親友": { word: "閃", img: "dodge" }
     };
-
     const imgMap = {
         "default": "./potato.png", "charge": "./potato_charge.png", "flirt": "./potato_flirt.png", 
         "party": "./potato_party.png", "pray": "./potato_pray.png", "travel": "./potato_travel.png", 
@@ -219,21 +240,63 @@
         { title: "上上閃", content: "麻煩事來閃得快<br>鍋來不背跑得快<br>今日身手最矯健<br>奧運金牌就是你", note: "解曰：閃躲技能點滿" },
         { title: "大吉買", content: "購物車裡滿滿滿<br>卡刷下去心不軟<br>錢沒有不見去哪<br>只是變成喜歡款", note: "解曰：清空購物車" }
     ];
+    
+    // 真實感資料庫
+    const luckyColors = ["#e74c3c|熱情紅", "#3498db|憂鬱藍", "#f1c40f|發財黃", "#2ecc71|韭菜綠", "#9b59b6|基情紫", "#34495e|加班黑", "#95a5a6|水泥灰", "#e67e22|過勞橘"];
+    const luckyDirections = ["東方", "西方", "南方", "北方", "東北", "東南", "西北", "西南", "床上", "公司外"];
 
-    function init() { updateDateDisplay(); }
-
-    // 簡轉繁輔助函式 (針對 lunar 庫的常見字)
+    // 簡轉繁
     function s2t(text) {
         if(!text) return "";
-        return text
-            .replace(/龙/g, "龍").replace(/马/g, "馬").replace(/鸡/g, "雞").replace(/猪/g, "豬")
+        return text.replace(/龙/g, "龍").replace(/马/g, "馬").replace(/鸡/g, "雞").replace(/猪/g, "豬")
             .replace(/羊/g, "羊").replace(/冲/g, "沖").replace(/历/g, "曆").replace(/丑/g, "丑")
             .replace(/冬/g, "冬").replace(/腊/g, "臘").replace(/阳/g, "陽").replace(/阴/g, "陰")
             .replace(/灶/g, "灶").replace(/门/g, "門").replace(/户/g, "戶");
     }
 
+    // 資料記憶
+    function loadUserData() {
+        const savedName = localStorage.getItem('potato_userName');
+        const savedBirthDate = localStorage.getItem('potato_birthDate');
+        const savedBirthTime = localStorage.getItem('potato_birthTime');
+        const savedTarget = localStorage.getItem('potato_targetName');
+        if (savedName) document.getElementById('userName').value = savedName;
+        if (savedBirthDate) document.getElementById('userBirthDate').value = savedBirthDate;
+        if (savedBirthTime) document.getElementById('userBirthTime').value = savedBirthTime;
+        if (savedTarget) document.getElementById('targetName').value = savedTarget;
+    }
+    function saveUserData() {
+        localStorage.setItem('potato_userName', document.getElementById('userName').value);
+        localStorage.setItem('potato_birthDate', document.getElementById('userBirthDate').value);
+        localStorage.setItem('potato_birthTime', document.getElementById('userBirthTime').value);
+        localStorage.setItem('potato_targetName', document.getElementById('targetName').value);
+    }
+
+    // 偽隨機演算法 (Seed)
+    function getSeededRandom(seed) {
+        let h = 0xdeadbeef;
+        for(let i = 0; i < seed.length; i++) h = Math.imul(h ^ seed.charCodeAt(i), 2654435761);
+        return ((h ^ h >>> 16) >>> 0) / 4294967296;
+    }
+    // 計算幸運指標
+    function calculateDailyLuck(date, zodiac) {
+        const seed = `${date.getFullYear()}${date.getMonth()}${date.getDate()}-${zodiac}`;
+        const rand = getSeededRandom(seed);
+        const luckyNum = Math.floor(rand * 10);
+        const colorIndex = Math.floor((rand * 100) % luckyColors.length);
+        const [colorHex, colorName] = luckyColors[colorIndex].split('|');
+        const hour = 9 + Math.floor((rand * 1000) % 10);
+        const luckyTime = `${hour}:00 - ${hour+1}:00`;
+        const dirIndex = Math.floor((rand * 50) % luckyDirections.length);
+        const direction = luckyDirections[dirIndex];
+        return { luckyNum, colorName, colorHex, luckyTime, direction };
+    }
+
+    function init() { updateDateDisplay(); loadUserData(); }
+
     async function tryAIAnalysis() {
         if (isProcessing) return;
+        saveUserData();
         isProcessing = true;
         const btn = document.getElementById('aiBtn');
         const originalText = btn.innerText;
@@ -246,7 +309,6 @@
 
         const name = document.getElementById('userName').value.trim() || "善男信女";
         const targetName = document.getElementById('targetName').value.trim();
-        // 取得關係類型 (love/hate)
         const relationType = document.querySelector('input[name="relation"]:checked').value;
         const mood = document.getElementById('userMood').value.trim() || "不知道";
         
@@ -260,24 +322,18 @@
         
         let themeData = null;
         for(let act of yiList) { if(almanacRules[act]) { themeData = almanacRules[act]; break; } }
-        if (!themeData || themeData === almanacRules["default"]) {
-            for(let act of jiList) { if(badDayRules[act]) { themeData = badDayRules[act]; break; } }
-        }
+        if (!themeData || themeData === almanacRules["default"]) { for(let act of jiList) { if(badDayRules[act]) { themeData = badDayRules[act]; break; } } }
         if (!themeData) themeData = almanacRules["default"];
         
         const mainWord = themeData.word;
         const imgType = themeData.img;
 
+        // 計算幸運
+        const luck = calculateDailyLuck(currentDate, zodiac);
+
         document.getElementById('resultWord').innerText = mainWord;
         document.getElementById('mascotImage').src = imgMap[imgType] || imgMap["default"];
-        
-        // 卡片標題邏輯：有對象就顯示 "XXX vs YYY"
-        if(targetName) {
-            document.getElementById('resName').innerText = `${name} ⚔️ ${targetName}`;
-        } else {
-            document.getElementById('resName').innerText = `${name} 的今日運勢`;
-        }
-        
+        document.getElementById('resName').innerText = targetName ? `${name} ⚔️ ${targetName}` : `${name} 的今日運勢`;
         document.getElementById('resDate').innerText = `${currentDate.getFullYear()}.${currentDate.getMonth()+1}.${currentDate.getDate()}`;
         document.getElementById('resLunar').innerText = `農曆 ${lunar.getMonthInChinese()}月${lunar.getDayInChinese()}`;
         document.getElementById('resMoodTag').innerText = "心情：" + mood;
@@ -291,19 +347,29 @@
         document.getElementById('bazi-h').innerText = s2t(bazi.getTime());
         document.getElementById('vipZodiac').innerText = zodiac;
 
+        // 插入幸運儀表板
+        const luckyHTML = `
+            <div class="lucky-dash">
+                <div class="lucky-item"><div class="lucky-label">幸運色</div><div class="lucky-val" style="color:${luck.colorHex}">${luck.colorName}</div></div>
+                <div class="lucky-item"><div class="lucky-label">幸運數</div><div class="lucky-val">${luck.luckyNum}</div></div>
+                <div class="lucky-item"><div class="lucky-label">吉時</div><div class="lucky-val">${luck.luckyTime}</div></div>
+                <div class="lucky-item"><div class="lucky-label">吉位</div><div class="lucky-val">${luck.direction}</div></div>
+            </div>
+        `;
+        document.getElementById('luckyDashboard').innerHTML = luckyHTML;
+
         try {
             if (!GEMINI_API_KEY || GEMINI_API_KEY.includes("YOUR_")) throw new Error("Key Missing");
 
-            // --- AI 邏輯分支 ---
             let task1Prompt = "";
             if (targetName) {
                 if (relationType === "love") {
-                    task1Prompt = `使用者 ${name} 想問與對象 ${targetName} 的【戀愛姻緣】。今日關鍵字「${mainWord}」。請判斷今天適合告白、約會還是保持距離？(請用曖昧、撩人或勸世的語氣，直接對 ${name} 說話)。`;
+                    task1Prompt = `使用者 ${name} 想問與對象 ${targetName} 的【戀愛姻緣】。今日關鍵字「${mainWord}」。幸運色${luck.colorName}。請判斷今天適合告白、約會還是保持距離？(請用曖昧、撩人或勸世的語氣，直接對 ${name} 說話)。`;
                 } else {
-                    task1Prompt = `使用者 ${name} 想問與對象 ${targetName} 的【職場/孽緣/仇人關係】。今日關鍵字「${mainWord}」。請判斷今天適合嗆聲、開戰還是閃躲？(請用毒舌、戰鬥或腹黑的語氣，直接對 ${name} 說話)。`;
+                    task1Prompt = `使用者 ${name} 想問與對象 ${targetName} 的【職場/孽緣/仇人關係】。今日關鍵字「${mainWord}」。幸運色${luck.colorName}。請判斷今天適合嗆聲、開戰還是閃躲？(請用毒舌、戰鬥或腹黑的語氣，直接對 ${name} 說話)。`;
                 }
             } else {
-                task1Prompt = `請解釋為什麼在「${mood}」的心情下，今天最適合「${mainWord}」。(請直接對 "${name}" 說話，風格毒舌幽默)。`;
+                task1Prompt = `請解釋為什麼在「${mood}」的心情下，今天最適合「${mainWord}」。(請直接對 "${name}" 說話，可提到今天的幸運色${luck.colorName}和數字${luck.luckyNum}，風格毒舌幽默)。`;
             }
 
             const prompt = `
@@ -383,8 +449,6 @@
     function changeMonth(o){calendarViewDate.setMonth(calendarViewDate.getMonth()+o);renderCalendar();}
     function renderCalendar(){const g=document.getElementById('calendarGrid');g.innerHTML="";document.getElementById('calTitle').innerText=`${calendarViewDate.getFullYear()}年 ${calendarViewDate.getMonth()+1}月`;['日','一','二','三','四','五','六'].forEach(w=>{const d=document.createElement('div');d.innerText=w;d.style.fontSize="12px";g.appendChild(d)});const y=calendarViewDate.getFullYear();const m=calendarViewDate.getMonth();const f=new Date(y,m,1);const l=new Date(y,m+1,0);for(let i=0;i<f.getDay();i++)g.appendChild(document.createElement('div'));for(let d=1;d<=l.getDate();d++){const c=document.createElement('div');c.className='cal-cell';c.innerText=d;if(new Date(y,m,d).toDateString()===new Date().toDateString())c.classList.add('is-today');c.onclick=()=>{currentDate=new Date(y,m,d);showDetails()};g.appendChild(c);}}
     function resetApp(){document.getElementById('userMood').value="";document.getElementById('targetName').value="";currentDate=new Date();calendarViewDate=new Date();updateDateDisplay();showPage('page-input');document.getElementById('detail-modal').style.display='none';}
-    
-    // 詳細頁也加入繁體修正
     function showDetails(){document.getElementById('detail-modal').style.display='flex';try{const l=Solar.fromDate(currentDate).getLunar();const s=(f)=>{try{return f()}catch{return"-"}};document.getElementById('d-date').innerText=`${currentDate.getFullYear()}/${currentDate.getMonth()+1}/${currentDate.getDate()}`;document.getElementById('d-ganzhi').innerText=s2t(`${l.getYearInGanZhi()}年 ${l.getMonthInGanZhi()}月 ${l.getDayInGanZhi()}日`);document.getElementById('d-yi').innerText=s2t(s(()=>l.getDayYi()).join(',')||"-");document.getElementById('d-ji').innerText=s2t(s(()=>l.getDayJi()).join(',')||"-");document.getElementById('d-chong').innerText=s2t(`${l.getDayChongDesc()}`);document.getElementById('d-wealth').innerText=s2t(`${l.getPositionXi()} / ${l.getPositionCai()}`);}catch{}}
     function closeDetails(){document.getElementById('detail-modal').style.display='none';}
 
