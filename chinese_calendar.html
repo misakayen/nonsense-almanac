@@ -17,16 +17,21 @@
         body { font-family: "Microsoft JhengHei", "Heiti TC", sans-serif; background-color: #f0f2f5; color: #333; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; overflow-x: hidden; touch-action: manipulation; }
         .container { width: 340px; max-width: 90%; position: relative; padding-bottom: 50px; }
         
+        /* 頁面切換 */
         .page { background: white; border-radius: 24px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); text-align: center; display: none; }
         #page-input { padding: 40px 30px; display: block; } 
         #page-result { padding: 0; background: transparent; box-shadow: none; } 
         #page-calendar { padding: 20px; } #page-fortune { padding: 30px 20px; }
 
+        /* 輸入區塊 */
         .input-group { margin-bottom: 15px; text-align: left; }
+        .input-row { display: flex; gap: 10px; width: 100%; }
+        .input-row input { flex: 1; min-width: 0; }
         input { width: 100%; padding: 12px; font-size: 16px; border: 2px solid #eee; border-radius: 12px; box-sizing: border-box; outline: none; text-align: center; font-family: inherit; }
         input:focus { border-color: #2c3e50; }
         .label-text { font-size: 14px; color: #666; margin-bottom: 5px; display: block; text-align: left; padding-left: 5px; font-weight: bold;}
 
+        /* 關係開關 */
         .relation-switch { display: flex; gap: 10px; margin-top: 5px; }
         .relation-option { flex: 1; }
         .relation-option input { display: none; }
@@ -34,14 +39,16 @@
         .relation-option input:checked + label.love { border-color: #e84393; background: #fff0f6; color: #e84393; font-weight: bold; }
         .relation-option input:checked + label.hate { border-color: #2c3e50; background: #ecf0f1; color: #2c3e50; font-weight: bold; }
 
+        /* 按鈕 */
         .btn { background-color: #2c3e50; color: white; border: none; border-radius: 12px; padding: 15px 30px; font-size: 16px; font-weight: bold; cursor: pointer; width: 100%; margin-bottom: 10px; transition: 0.2s; }
         .btn:disabled { background-color: #95a5a6; cursor: not-allowed; opacity: 0.7; }
         .btn-fortune { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; box-shadow: 0 4px 15px rgba(118, 75, 162, 0.4); }
         .btn-secondary { background-color: #ecf0f1; color: #7f8c8d; }
-        .btn-action { background-color: #e74c3c; } .btn-ig { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: white; box-shadow: 0 4px 15px rgba(220, 39, 67, 0.4); }
+        .btn-action { background-color: #e74c3c; } 
+        .btn-ig { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: white; box-shadow: 0 4px 15px rgba(220, 39, 67, 0.4); }
         .btn-info { background-color: #3498db; } .btn-outline { background: transparent; border: 2px solid #2c3e50; color: #2c3e50; }
 
-        /* 結果卡片 - 基礎 */
+        /* 結果卡片 */
         .result-card { background: #fffdf5; padding: 25px 20px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); border: 6px solid #2c3e50; position: relative; margin-bottom: 15px; text-align: center; overflow: hidden; }
         .result-card::before { content: ""; position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 16px; height: 16px; background: #f0f2f5; border: 6px solid #2c3e50; border-radius: 50%; z-index: 2; }
         .mascot-img { width: 160px; height: 160px; object-fit: contain; margin: 5px auto; display: block; animation: fadeIn 0.5s ease-in; }
@@ -49,40 +56,37 @@
         .card-header { border-bottom: 2px dashed #ccc; padding-bottom: 10px; margin-bottom: 10px; }
         .card-name { font-size: 20px; font-weight: bold; color: #d35400; margin-bottom: 5px; }
         .card-date { font-size: 14px; color: #666; } .card-lunar { font-size: 14px; color: #e74c3c; margin-top: 5px; }
+        
         .main-word { font-size: 60px; font-weight: 900; color: #2c3e50; margin: 5px 0; line-height: 1; }
         .mood-tag { display: inline-block; background: #2c3e50; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; margin-bottom: 5px; }
         
         .lucky-dash { display: flex; justify-content: space-around; margin: 15px 0; background: white; padding: 12px 5px; border-radius: 12px; border: 1px dashed #ccc; font-size: 12px; }
         .lucky-item { text-align: center; width: 25%; position: relative; }
         .lucky-item:not(:last-child)::after { content: ""; position: absolute; right: 0; top: 10%; height: 80%; width: 1px; background: #eee; }
+        .lucky-label { color: #aaa; margin-bottom: 3px; font-size: 10px; }
         .lucky-val { font-weight: bold; font-size: 13px; color: #2c3e50; }
 
         .advice-text { font-size: 15px; line-height: 1.6; color: #555; margin-top: 10px; text-align: justify; padding: 15px; background: rgba(0,0,0,0.03); border-radius: 12px; min-height: 60px; }
 
-        /* === VIP 升級版樣式 === */
+        /* === VIP 天機覺醒樣式 === */
         .vip-section { margin-top: 20px; position: relative; border-radius: 12px; overflow: hidden; transition: all 0.5s; }
-        
-        /* 未解鎖時的樣式 */
         .vip-section.locked { border-top: 2px dashed #d4af37; padding-top: 15px; background: transparent; }
-        
-        /* 解鎖後的樣式 (黑金風) */
+        /* 黑金解鎖狀態 */
         .vip-section.unlocked-style { 
-            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d); /* 酷炫漸層 */
-            background: linear-gradient(135deg, #232526, #414345); /* 黑金質感 */
+            background: linear-gradient(135deg, #232526, #414345); 
             padding: 20px; 
             color: #f1c40f; 
             border: 2px solid #f1c40f;
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
-
         .vip-title { color: #d4af37; font-weight: bold; font-size: 14px; margin-bottom: 15px; display: inline-block; background: #fffdf5; padding: 2px 10px; border: 1px solid #d4af37; border-radius: 20px; z-index: 5; position: relative;}
         .vip-section.unlocked-style .vip-title { background: #000; color: #f1c40f; border-color: #f1c40f; }
 
         .vip-content { text-align: left; font-size: 14px; color: #444; line-height: 1.7; filter: blur(6px); user-select: none; transition: all 0.5s; opacity: 0.7; height: 150px; overflow: hidden; }
         .vip-content.unlocked { filter: blur(0); user-select: auto; opacity: 1; height: auto; overflow: visible; }
-        .vip-section.unlocked-style .vip-content { color: #ecf0f1; } /* 解鎖後字變白 */
+        .vip-section.unlocked-style .vip-content { color: #ecf0f1; } 
 
-        /* 能量條樣式 */
+        /* 能量條 */
         .power-bar-container { margin-bottom: 8px; }
         .power-label { font-size: 12px; display: flex; justify-content: space-between; margin-bottom: 2px; }
         .progress-bg { background: rgba(255,255,255,0.2); height: 8px; border-radius: 4px; overflow: hidden; }
@@ -97,6 +101,7 @@
         .bazi-col { text-align: center; } .bazi-label { font-size: 10px; color: #999; } .bazi-val { font-size: 16px; font-weight: bold; color: #333; }
         .footer-note { font-size: 10px; color: #bbb; margin-top: 15px; text-align: center; letter-spacing: 1px; }
 
+        /* Loading */
         .loading-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.98); z-index: 20; display: none; flex-direction: column; align-items: center; justify-content: center; border-radius: 24px; }
         .spinner { width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #2c3e50; border-radius: 50%; animation: spin 1s linear infinite; } @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
@@ -141,8 +146,7 @@
                 <div class="vip-content" id="vipContent">
                     
                     <p style="font-weight:bold; color:#f1c40f; margin:10px 0 5px 0;">📊 今日戰力指數</p>
-                    <div id="powerBars">
-                        </div>
+                    <div id="powerBars"></div>
 
                     <p style="font-weight:bold; color:#f1c40f; margin:15px 0 5px 0;">⚡ 今日作弊代碼</p>
                     <div style="background:rgba(255,255,255,0.1); padding:10px; border-radius:8px; font-size:13px;">
@@ -179,6 +183,7 @@
 
 <script>
     // ===========================================
+    // ⚠️⚠️⚠️ 記得填入你的 API KEY！ ⚠️⚠️⚠️
     const GEMINI_API_KEY = "AIzaSyA65QplO1Elk4Lfp6EIton99I_6QsSk560"; 
     // ===========================================
 
@@ -186,12 +191,11 @@
     let calendarViewDate = new Date();
     let isProcessing = false;
 
-    // ... (almanacRules, badDayRules, imgMap, poems, luckyColors, luckyDirections 保持不變，略過以節省篇幅) ...
-    // 請複製 v1.19 的這些變數定義
+    // 數據庫
     const almanacRules = { "開市": { word: "衝", img: "charge" }, "交易": { word: "衝", img: "charge" }, "入宅": { word: "揪", img: "party" }, "纳采": { word: "揪", img: "party" }, "嫁娶": { word: "撩", img: "flirt" }, "訂盟": { word: "撩", img: "flirt" }, "祭祀": { word: "還", img: "pray" }, "祈福": { word: "還", img: "pray" }, "出行": { word: "溜", img: "travel" }, "旅遊": { word: "溜", img: "travel" }, "動土": { word: "拆", img: "break" }, "破屋": { word: "拆", img: "break" }, "解除": { word: "拆", img: "break" }, "安床": { word: "躺", img: "sleep" }, "移徙": { word: "躺", img: "sleep" }, "治病": { word: "撐", img: "heavy" }, "安葬": { word: "冷", img: "freeze" }, "default": { word: "龜", img: "turtle" } };
     const badDayRules = { "出行": { word: "卡", img: "stuck" }, "嫁娶": { word: "冷", img: "freeze" }, "開市": { word: "雷", img: "shock" }, "動土": { word: "別", img: "stop" }, "會親友": { word: "閃", img: "dodge" } };
     const imgMap = { "default": "./potato.png", "charge": "./potato_charge.png", "flirt": "./potato_flirt.png", "party": "./potato_party.png", "pray": "./potato_pray.png", "travel": "./potato_travel.png", "break": "./potato_break.png", "heavy": "./potato_heavy.png", "sleep": "./potato_sleep.png", "turtle": "./potato_turtle.png", "freeze": "./potato_freeze.png", "shock": "./potato_shock.png", "stuck": "./potato_stuck.png", "stop": "./potato_stop.png", "dodge": "./potato_dodge.png", "rich": "./potato_rich.png" };
-    const poems = [ { title: "大吉廢", content: "今日宜躺不宜忙<br>老闆電話耳邊旁<br>薪水入帳最重要<br>其他皆是夢一場", note: "解曰：躺著就對了" }, { title: "中吉懶", content: "工作堆得像座山<br>不如先去爬枕山<br>夢裡什麼都有得<br>醒來繼續擺爛攤", note: "解曰：逃避雖可恥但有用" }, { title: "下下忙", content: "今日衰神在頭頂<br>千萬不要看憧憬<br>若是硬要出門去<br>記得帶把防身餅", note: "解曰：乖乖待在家" }, { title: "末吉餓", content: "五臟廟裡鬧空城<br>減肥計畫萬不能<br>珍珠奶茶來一杯<br>快樂似神仙下塵", note: "解曰：吃飽再說" } ]; // 簡化
+    const poems = [ { title: "大吉廢", content: "今日宜躺不宜忙<br>老闆電話耳邊旁<br>薪水入帳最重要<br>其他皆是夢一場", note: "解曰：躺著就對了" }, { title: "中吉懶", content: "工作堆得像座山<br>不如先去爬枕山<br>夢裡什麼都有得<br>醒來繼續擺爛攤", note: "解曰：逃避雖可恥但有用" }, { title: "下下忙", content: "今日衰神在頭頂<br>千萬不要看憧憬<br>若是硬要出門去<br>記得帶把防身餅", note: "解曰：乖乖待在家" }, { title: "末吉餓", content: "五臟廟裡鬧空城<br>減肥計畫萬不能<br>珍珠奶茶來一杯<br>快樂似神仙下塵", note: "解曰：吃飽再說" } ]; 
     const luckyColors = ["#e74c3c|熱情紅", "#3498db|憂鬱藍", "#f1c40f|發財黃", "#2ecc71|韭菜綠", "#9b59b6|基情紫", "#34495e|加班黑", "#95a5a6|水泥灰", "#e67e22|過勞橘"];
     const luckyDirections = ["東方", "西方", "南方", "北方", "東北", "東南", "西北", "西南", "床上", "公司外"];
 
@@ -200,7 +204,6 @@
     function saveUserData() { localStorage.setItem('potato_userName', document.getElementById('userName').value); localStorage.setItem('potato_birthDate', document.getElementById('userBirthDate').value); localStorage.setItem('potato_birthTime', document.getElementById('userBirthTime').value); localStorage.setItem('potato_targetName', document.getElementById('targetName').value); }
     function getSeededRandom(seed) { let h = 0xdeadbeef; for(let i = 0; i < seed.length; i++) h = Math.imul(h ^ seed.charCodeAt(i), 2654435761); return ((h ^ h >>> 16) >>> 0) / 4294967296; }
     
-    // 計算幸運 & 五維分數
     function calculateDailyLuck(date, zodiac) {
         const seed = `${date.getFullYear()}${date.getMonth()}${date.getDate()}-${zodiac}`;
         const rand = getSeededRandom(seed);
@@ -212,15 +215,13 @@
         const dirIndex = Math.floor((rand * 50) % luckyDirections.length);
         const direction = luckyDirections[dirIndex];
 
-        // 計算五維分數 (0-100)
         const scores = {
-            wealth: Math.floor(getSeededRandom(seed + "wealth") * 60 + 40), // 40-100
+            wealth: Math.floor(getSeededRandom(seed + "wealth") * 60 + 40),
             love: Math.floor(getSeededRandom(seed + "love") * 100),
             work: Math.floor(getSeededRandom(seed + "work") * 100),
-            health: Math.floor(getSeededRandom(seed + "health") * 40 + 60), // 60-100
+            health: Math.floor(getSeededRandom(seed + "health") * 40 + 60),
             luck: Math.floor(getSeededRandom(seed + "luck") * 100)
         };
-
         return { luckyNum, colorName, colorHex, luckyTime, direction, scores };
     }
 
@@ -228,6 +229,13 @@
 
     async function tryAIAnalysis() {
         if (isProcessing) return;
+        
+        // Key 檢查
+        if (!GEMINI_API_KEY || GEMINI_API_KEY.includes("YOUR_")) {
+            alert("請先在程式碼中填入你的 Gemini API Key！");
+            return;
+        }
+
         saveUserData();
         isProcessing = true;
         const btn = document.getElementById('aiBtn');
@@ -238,87 +246,74 @@
 
         showPage('page-result');
         document.getElementById('aiLoading').style.display = 'flex';
-        // 重置 VIP 狀態
+        // 重置 VIP
         document.getElementById('vipSection').className = 'vip-section locked';
         document.getElementById('vipContent').classList.remove('unlocked');
         document.getElementById('vipOverlay').style.display = 'flex';
 
-        const name = document.getElementById('userName').value.trim() || "善男信女";
-        const targetName = document.getElementById('targetName').value.trim();
-        const relationType = document.querySelector('input[name="relation"]:checked').value;
-        const mood = document.getElementById('userMood').value.trim() || "不知道";
-        const birthDateStr = document.getElementById('userBirthDate').value;
-        const birthTimeStr = document.getElementById('userBirthTime').value;
-        const birthDate = new Date(birthDateStr);
-        const zodiac = getZodiacSign(birthDate);
-        const lunar = Solar.fromDate(currentDate).getLunar();
-        
-        let themeData = almanacRules["default"];
-        // (略過重複的 almanac 邏輯，保留原樣)
-        const yiList = lunar.getDayYi();
-        for(let act of yiList) { if(almanacRules[act]) { themeData = almanacRules[act]; break; } }
-        const mainWord = themeData.word;
-        const imgType = themeData.img;
-
-        const luck = calculateDailyLuck(currentDate, zodiac);
-
-        document.getElementById('resultWord').innerText = mainWord;
-        document.getElementById('mascotImage').src = imgMap[imgType] || imgMap["default"];
-        document.getElementById('resName').innerText = targetName ? `${name} ⚔️ ${targetName}` : `${name} 的今日運勢`;
-        document.getElementById('resDate').innerText = `${currentDate.getFullYear()}.${currentDate.getMonth()+1}.${currentDate.getDate()}`;
-        document.getElementById('resLunar').innerText = `農曆 ${lunar.getMonthInChinese()}月${lunar.getDayInChinese()}`;
-        document.getElementById('resMoodTag').innerText = "心情：" + mood;
-
-        const [y, m, d] = birthDateStr.split('-').map(Number);
-        const [h, min] = birthTimeStr.split(':').map(Number);
-        const bazi = Solar.fromYmdHms(y, m, d, h, min, 0).getLunar().getEightChar();
-        document.getElementById('bazi-y').innerText = s2t(bazi.getYear());
-        document.getElementById('bazi-m').innerText = s2t(bazi.getMonth());
-        document.getElementById('bazi-d').innerText = s2t(bazi.getDay());
-        document.getElementById('bazi-h').innerText = s2t(bazi.getTime());
-        document.getElementById('vipZodiac').innerText = zodiac;
-
-        // 生成五維進度條 HTML
-        const categories = [
-            {id: 'wealth', label: '💰 財運指數'},
-            {id: 'love', label: '🍑 桃花指數'},
-            {id: 'work', label: '💼 社畜指數'},
-            {id: 'health', label: '🔋 健康指數'},
-            {id: 'luck', label: '🌟 貴人指數'}
-        ];
-        let barsHTML = "";
-        categories.forEach(cat => {
-            const score = luck.scores[cat.id];
-            barsHTML += `
-                <div class="power-bar-container">
-                    <div class="power-label"><span>${cat.label}</span><span class="score-val">${score}</span></div>
-                    <div class="progress-bg"><div class="progress-fill" style="width:${score}%"></div></div>
-                </div>
-            `;
-        });
-        document.getElementById('powerBars').innerHTML = barsHTML;
-
-        // 幸運儀表板
-        const luckyHTML = `
-            <div class="lucky-dash">
-                <div class="lucky-item"><div class="lucky-label">幸運色</div><div class="lucky-val" style="color:${luck.colorHex}">${luck.colorName}</div></div>
-                <div class="lucky-item"><div class="lucky-label">幸運數</div><div class="lucky-val">${luck.luckyNum}</div></div>
-                <div class="lucky-item"><div class="lucky-label">吉時</div><div class="lucky-val">${luck.luckyTime}</div></div>
-                <div class="lucky-item"><div class="lucky-label">吉位</div><div class="lucky-val">${luck.direction}</div></div>
-            </div>
-        `;
-        document.getElementById('luckyDashboard').innerHTML = luckyHTML;
-
         try {
-            if (!GEMINI_API_KEY || GEMINI_API_KEY.includes("YOUR_")) throw new Error("Key Missing");
+            const name = document.getElementById('userName').value.trim() || "善男信女";
+            const targetName = document.getElementById('targetName').value.trim();
+            const relationType = document.querySelector('input[name="relation"]:checked').value;
+            const mood = document.getElementById('userMood').value.trim() || "不知道";
+            const birthDateStr = document.getElementById('userBirthDate').value;
+            const birthTimeStr = document.getElementById('userBirthTime').value;
+            const birthDate = new Date(birthDateStr);
+            const zodiac = getZodiacSign(birthDate);
+            const lunar = Solar.fromDate(currentDate).getLunar();
+            
+            let themeData = almanacRules["default"];
+            const yiList = lunar.getDayYi();
+            for(let act of yiList) { if(almanacRules[act]) { themeData = almanacRules[act]; break; } }
+            if (!themeData || themeData === almanacRules["default"]) { 
+                const jiList = lunar.getDayJi();
+                for(let act of jiList) { if(badDayRules[act]) { themeData = badDayRules[act]; break; } } 
+            }
+            if (!themeData) themeData = almanacRules["default"];
 
-            // Prompt 優化：要求 AI 給出作弊代碼
+            const mainWord = themeData.word;
+            const imgType = themeData.img;
+            const luck = calculateDailyLuck(currentDate, zodiac);
+
+            document.getElementById('resultWord').innerText = mainWord;
+            document.getElementById('mascotImage').src = imgMap[imgType] || imgMap["default"];
+            document.getElementById('resName').innerText = targetName ? `${name} ⚔️ ${targetName}` : `${name} 的今日運勢`;
+            document.getElementById('resDate').innerText = `${currentDate.getFullYear()}.${currentDate.getMonth()+1}.${currentDate.getDate()}`;
+            document.getElementById('resLunar').innerText = `農曆 ${lunar.getMonthInChinese()}月${lunar.getDayInChinese()}`;
+            document.getElementById('resMoodTag').innerText = "心情：" + mood;
+
+            const [y, m, d] = birthDateStr.split('-').map(Number);
+            const [h, min] = birthTimeStr.split(':').map(Number);
+            const bazi = Solar.fromYmdHms(y, m, d, h, min, 0).getLunar().getEightChar();
+            document.getElementById('bazi-y').innerText = s2t(bazi.getYear());
+            document.getElementById('bazi-m').innerText = s2t(bazi.getMonth());
+            document.getElementById('bazi-d').innerText = s2t(bazi.getDay());
+            document.getElementById('bazi-h').innerText = s2t(bazi.getTime());
+            document.getElementById('vipZodiac').innerText = zodiac;
+
+            // 五維進度條
+            const categories = [
+                {id: 'wealth', label: '💰 財運指數'}, {id: 'love', label: '🍑 桃花指數'},
+                {id: 'work', label: '💼 社畜指數'}, {id: 'health', label: '🔋 健康指數'}, {id: 'luck', label: '🌟 貴人指數'}
+            ];
+            let barsHTML = "";
+            categories.forEach(cat => {
+                const score = luck.scores[cat.id];
+                barsHTML += `<div class="power-bar-container"><div class="power-label"><span>${cat.label}</span><span class="score-val">${score}</span></div><div class="progress-bg"><div class="progress-fill" style="width:${score}%"></div></div></div>`;
+            });
+            document.getElementById('powerBars').innerHTML = barsHTML;
+
+            // 幸運儀表板
+            const luckyHTML = `<div class="lucky-dash"><div class="lucky-item"><div class="lucky-label">幸運色</div><div class="lucky-val" style="color:${luck.colorHex}">${luck.colorName}</div></div><div class="lucky-item"><div class="lucky-label">幸運數</div><div class="lucky-val">${luck.luckyNum}</div></div><div class="lucky-item"><div class="lucky-label">吉時</div><div class="lucky-val">${luck.luckyTime}</div></div><div class="lucky-item"><div class="lucky-label">吉位</div><div class="lucky-val">${luck.direction}</div></div></div>`;
+            document.getElementById('luckyDashboard').innerHTML = luckyHTML;
+
+            // Prompt
             let task1Prompt = targetName 
                 ? (relationType === "love" ? `使用者 ${name} 想問與對象 ${targetName} 的【戀愛姻緣】。幸運色${luck.colorName}。請判斷今天適合告白、約會還是保持距離？(語氣曖昧撩人)` : `使用者 ${name} 想問與對象 ${targetName} 的【職場/孽緣/仇人關係】。幸運色${luck.colorName}。請判斷今天適合嗆聲、開戰還是閃躲？(語氣毒舌腹黑)`)
                 : `請解釋為什麼在「${mood}」的心情下，今天最適合「${mainWord}」。(語氣毒舌幽默)`;
 
             const prompt = `
-                【System: You are a Taiwanese fortune teller AI. Output ONLY in Traditional Chinese (Taiwan/TW).】
+                【System: You are a Taiwanese fortune teller AI. Output ONLY in Traditional Chinese (Taiwan/TW). Do NOT use Simplified Chinese.】
                 
                 今日農民曆關鍵字：【${mainWord}】。
                 使用者心情：${mood}。
@@ -326,7 +321,7 @@
                 八字年命：${s2t(bazi.getYearNaYin())}。
 
                 任務 1 (Advice): ${task1Prompt} (50字內)
-                任務 2 (Cheat Sheet): 給出 3 個具體的【今日作弊代碼】，例如「宜：喝珍奶」、「忌：回老闆訊息」、「幸運物：發票」。(簡短列點)
+                任務 2 (Cheat Sheet): 給出 3 個具體的【今日作弊代碼】，例如「宜：喝珍奶」、「忌：回老闆訊息」、「幸運物：發票」。(簡短列點，不要解釋)
                 任務 3 (Vip Life): 針對這個八字年命的幽默人生評語。
 
                 請回傳 JSON:
@@ -337,13 +332,14 @@
                 }
             `;
 
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemma-3-27b-it:generateContent?key=${GEMINI_API_KEY}`, {
+            // 使用 gemini-1.5-flash
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
             });
 
-            if (!response.ok) throw new Error("API Error");
+            if (!response.ok) throw new Error("API Error: " + response.status);
             const data = await response.json();
             const jsonStr = data.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '').trim();
             const result = JSON.parse(jsonStr);
@@ -354,6 +350,7 @@
 
         } catch (e) {
             console.warn("AI 失敗:", e);
+            alert("通靈失敗！請檢查網路或 API Key。\n錯誤訊息：" + e.message);
             document.getElementById('resultAdvice').innerText = "AI 休息中，聽農民曆的就對了。";
             document.getElementById('vipCheatSheet').innerText = "宜：看開一點\n忌：太認真";
         } finally {
@@ -365,15 +362,12 @@
         if(confirm("【模擬付費】觀看廣告解鎖黑金天機？")){
             document.getElementById('vipOverlay').style.display='none';
             document.getElementById('vipContent').classList.add('unlocked');
-            // 切換成黑金樣式
             document.getElementById('vipSection').classList.remove('locked');
             document.getElementById('vipSection').classList.add('unlocked-style');
             document.getElementById('page-result').scrollIntoView({behavior:'smooth',block:'end'});
         }
     }
 
-    // (Download logic, Zodiac, Page logic, Calendar... same as v1.19)
-    // 為了節省空間，請確保這部分邏輯與 v1.19 相同，尤其是 downloadImage 裡的 'ig' 判斷
     function downloadImage(mode) {
         const captureArea = document.getElementById('captureArea');
         const clone = captureArea.cloneNode(true);
@@ -385,14 +379,10 @@
             const adviceInClone = clone.querySelector('.advice-text');
             if(adviceInClone) { adviceInClone.style.fontSize = '18px'; adviceInClone.style.padding = '20px'; }
         } else {
-            // 完整模式：強制切換成解鎖後的樣式
             const vipSecInClone = clone.querySelector('.vip-section');
             const vipContentInClone = clone.querySelector('.vip-content');
             const overlayInClone = clone.querySelector('.vip-lock-overlay');
-            if (vipSecInClone) {
-                vipSecInClone.classList.remove('locked');
-                vipSecInClone.classList.add('unlocked-style');
-            }
+            if (vipSecInClone) { vipSecInClone.classList.remove('locked'); vipSecInClone.classList.add('unlocked-style'); }
             if (vipContentInClone) vipContentInClone.classList.add('unlocked');
             if (overlayInClone) overlayInClone.style.display = 'none';
         }
@@ -401,7 +391,7 @@
         setTimeout(() => {
             html2canvas(clone, { scale: 2, backgroundColor: "#fffdf5", useCORS: true }).then(canvas => {
                 const link = document.createElement('a');
-                link.download = `運勢_${new Date().getTime()}.png`;
+                link.download = mode === 'ig' ? `廢話農民曆_Story_${new Date().getTime()}.png` : `廢話農民曆_Full_${new Date().getTime()}.png`;
                 link.href = canvas.toDataURL('image/png');
                 link.click();
                 document.body.removeChild(clone);
@@ -409,7 +399,7 @@
         }, 100);
     }
     
-    // ... (其他 helper functions: getZodiacSign, showPage, updateDateDisplay, etc. 保持與 v1.19 相同) ...
+    // Helper functions
     function getZodiacSign(d){const m=d.getMonth()+1;const dy=d.getDate();if((m==1&&dy>=20)||(m==2&&dy<=18))return"水瓶";if((m==2&&dy>=19)||(m==3&&dy<=20))return"雙魚";if((m==3&&dy>=21)||(m==4&&dy<=19))return"牡羊";if((m==4&&dy>=20)||(m==5&&dy<=20))return"金牛";if((m==5&&dy>=21)||(m==6&&dy<=21))return"雙子";if((m==6&&dy>=22)||(m==7&&dy<=22))return"巨蟹";if((m==7&&dy>=23)||(m==8&&dy<=22))return"獅子";if((m==8&&dy>=23)||(m==9&&dy<=22))return"處女";if((m==9&&dy>=23)||(m==10&&dy<=23))return"天秤";if((m==10&&dy>=24)||(m==11&&dy<=22))return"天蠍";if((m==11&&dy>=23)||(m==12&&dy<=21))return"射手";return"摩羯";}
     function showPage(pageId) { document.querySelectorAll('.page').forEach(el => el.style.display = 'none'); document.getElementById(pageId).style.display = 'block'; }
     function updateDateDisplay() { const d = new Date(); document.getElementById('dateDisplayInput').innerText = `${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()}`; }
