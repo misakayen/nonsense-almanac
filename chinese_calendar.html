@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>廢話農民曆 v1.26 (PWA修復版)</title>
+    <title>廢話農民曆 v1.27 (除錯版)</title>
     <link rel="manifest" href="manifest.json">
-    
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -18,26 +17,22 @@
     <style>
         body { font-family: "Microsoft JhengHei", "Heiti TC", sans-serif; background-color: #f0f2f5; color: #333; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; overflow-x: hidden; touch-action: manipulation; }
         .container { width: 340px; max-width: 90%; position: relative; padding-bottom: 50px; }
-        
         .page { background: white; border-radius: 24px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); text-align: center; display: none; }
         #page-input { padding: 40px 30px; display: block; } 
         #page-result { padding: 0; background: transparent; box-shadow: none; } 
         #page-calendar { padding: 20px; } #page-fortune { padding: 30px 20px; }
-
         .input-group { margin-bottom: 15px; text-align: left; }
         .input-row { display: flex; gap: 10px; width: 100%; }
         .input-row input { flex: 1; min-width: 0; }
         input { width: 100%; padding: 12px; font-size: 16px; border: 2px solid #eee; border-radius: 12px; box-sizing: border-box; outline: none; text-align: center; font-family: inherit; }
         input:focus { border-color: #2c3e50; }
         .label-text { font-size: 14px; color: #666; margin-bottom: 5px; display: block; text-align: left; padding-left: 5px; font-weight: bold;}
-
         .relation-switch { display: flex; gap: 10px; margin-top: 5px; }
         .relation-option { flex: 1; }
         .relation-option input { display: none; }
         .relation-option label { display: block; padding: 10px; border: 2px solid #eee; border-radius: 10px; text-align: center; cursor: pointer; font-size: 14px; color: #aaa; transition: 0.2s; }
         .relation-option input:checked + label.love { border-color: #e84393; background: #fff0f6; color: #e84393; font-weight: bold; }
         .relation-option input:checked + label.hate { border-color: #2c3e50; background: #ecf0f1; color: #2c3e50; font-weight: bold; }
-
         .btn { background-color: #2c3e50; color: white; border: none; border-radius: 12px; padding: 15px 30px; font-size: 16px; font-weight: bold; cursor: pointer; width: 100%; margin-bottom: 10px; transition: 0.2s; }
         .btn:disabled { background-color: #95a5a6; cursor: not-allowed; opacity: 0.7; }
         .btn-fortune { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; box-shadow: 0 4px 15px rgba(118, 75, 162, 0.4); }
@@ -45,60 +40,41 @@
         .btn-action { background-color: #e74c3c; } 
         .btn-ig { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: white; box-shadow: 0 4px 15px rgba(220, 39, 67, 0.4); }
         .btn-info { background-color: #3498db; } .btn-outline { background: transparent; border: 2px solid #2c3e50; color: #2c3e50; }
-
         .result-card { background: #fffdf5; padding: 25px 20px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); border: 6px solid #2c3e50; position: relative; margin-bottom: 15px; text-align: center; overflow: hidden; }
         .result-card::before { content: ""; position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 16px; height: 16px; background: #f0f2f5; border: 6px solid #2c3e50; border-radius: 50%; z-index: 2; }
         .mascot-img { width: 160px; height: 160px; object-fit: contain; margin: 5px auto; display: block; animation: fadeIn 0.5s ease-in; }
-        
         .card-header { border-bottom: 2px dashed #ccc; padding-bottom: 10px; margin-bottom: 10px; }
         .card-name { font-size: 20px; font-weight: bold; color: #d35400; margin-bottom: 5px; }
         .card-date { font-size: 14px; color: #666; } .card-lunar { font-size: 14px; color: #e74c3c; margin-top: 5px; }
         .main-word { font-size: 60px; font-weight: 900; color: #2c3e50; margin: 5px 0; line-height: 1; }
         .mood-tag { display: inline-block; background: #2c3e50; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; margin-bottom: 5px; }
-        
         .lucky-dash { display: flex; justify-content: space-around; margin: 15px 0; background: white; padding: 12px 5px; border-radius: 12px; border: 1px dashed #ccc; font-size: 12px; }
         .lucky-item { text-align: center; width: 25%; position: relative; }
         .lucky-item:not(:last-child)::after { content: ""; position: absolute; right: 0; top: 10%; height: 80%; width: 1px; background: #eee; }
         .lucky-label { color: #aaa; margin-bottom: 3px; font-size: 10px; }
         .lucky-val { font-weight: bold; font-size: 13px; color: #2c3e50; }
-
         .advice-text { font-size: 15px; line-height: 1.6; color: #555; margin-top: 10px; text-align: justify; padding: 15px; background: rgba(0,0,0,0.03); border-radius: 12px; min-height: 60px; }
-
-        /* VIP 黑金樣式 */
         .vip-section { margin-top: 20px; position: relative; border-radius: 12px; overflow: hidden; transition: all 0.5s; }
         .vip-section.locked { border-top: 2px dashed #d4af37; padding-top: 15px; background: transparent; }
-        .vip-section.unlocked-style { 
-            background: linear-gradient(135deg, #232526, #414345); 
-            padding: 20px; 
-            color: #f1c40f; 
-            border: 2px solid #f1c40f;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
+        .vip-section.unlocked-style { background: linear-gradient(135deg, #232526, #414345); padding: 20px; color: #f1c40f; border: 2px solid #f1c40f; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
         .vip-title { color: #d4af37; font-weight: bold; font-size: 14px; margin-bottom: 15px; display: inline-block; background: #fffdf5; padding: 2px 10px; border: 1px solid #d4af37; border-radius: 20px; z-index: 5; position: relative;}
         .vip-section.unlocked-style .vip-title { background: #000; color: #f1c40f; border-color: #f1c40f; }
-
         .vip-content { text-align: left; font-size: 14px; color: #444; line-height: 1.7; filter: blur(6px); user-select: none; transition: all 0.5s; opacity: 0.7; height: 150px; overflow: hidden; }
         .vip-content.unlocked { filter: blur(0); user-select: auto; opacity: 1; height: auto; overflow: visible; }
         .vip-section.unlocked-style .vip-content { color: #ecf0f1; } 
-
-        /* 戰力條 */
         .power-bar-container { margin-bottom: 8px; }
         .power-label { font-size: 12px; display: flex; justify-content: space-between; margin-bottom: 2px; }
         .progress-bg { background: rgba(255,255,255,0.2); height: 8px; border-radius: 4px; overflow: hidden; }
         .progress-fill { height: 100%; width: 0%; background: #f1c40f; transition: width 1.5s ease-out; }
         .score-val { color: #f1c40f; font-weight: bold; }
-
         .vip-lock-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; background: rgba(255, 253, 245, 0.7); }
         .btn-unlock { background: linear-gradient(45deg, #f1c40f, #f39c12); color: white; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; box-shadow: 0 4px 10px rgba(243, 156, 18, 0.4); cursor: pointer; animation: pulse 2s infinite; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
-        
         .bazi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin: 10px 0; background: rgba(255,255,255,0.9); padding: 8px; border-radius: 8px; border: 1px solid #eee; }
         .bazi-col { text-align: center; } .bazi-label { font-size: 10px; color: #999; } .bazi-val { font-size: 16px; font-weight: bold; color: #333; }
         .footer-note { font-size: 10px; color: #bbb; margin-top: 15px; text-align: center; letter-spacing: 1px; }
-
         .loading-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.98); z-index: 20; display: none; flex-direction: column; align-items: center; justify-content: center; border-radius: 24px; }
         .spinner { width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #2c3e50; border-radius: 50%; animation: spin 1s linear infinite; } @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
         .fortune-shaker { font-size: 80px; margin: 30px 0; cursor: pointer; display: inline-block; transition: transform 0.2s; } @keyframes shake { 0% { transform: translate(1px, 1px) rotate(0deg); } 10% { transform: translate(-1px, -2px) rotate(-1deg); } 50% { transform: translate(-1px, 2px) rotate(-1deg); } 100% { transform: translate(1px, -2px) rotate(-1deg); } } .shaking { animation: shake 0.5s; animation-iteration-count: infinite; } 
         .poem-card { background-color: #fff; border: 2px solid #2c3e50; padding: 20px; margin-top: 20px; display: none; animation: slideUp 0.5s ease-out; } @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } } 
         .poem-title { color: #c0392b; font-weight: bold; font-size: 24px; margin-bottom: 10px; border-bottom: 2px solid #c0392b; display: inline-block; padding-bottom: 5px; } .poem-content { font-size: 18px; line-height: 1.8; color: #333; margin: 15px 0; font-family: "KaiTi", "BiauKai", serif; font-weight: bold; } .poem-note { font-size: 12px; color: #888; margin-top: 10px; } 
@@ -173,7 +149,7 @@
 
 <script>
     // ===========================================
-    // ⚠️ 請在這裡填入你部署的 GAS 網址 (結尾是 /exec)
+    // ⚠️ 這裡填入 GAS 網址 (xxxx 記得換掉)
     const GAS_URL = "https://script.google.com/macros/s/AKfycbyoa6WVL06HPmBn-UJrfIFKX5h3-DfTDl4iigFXSv8XGTaOz7_5ahwq5uzMDzOHejdK/exec"; 
     // ===========================================
 
@@ -272,7 +248,7 @@
             document.getElementById('bazi-m').innerText = s2t(bazi.getMonth());
             document.getElementById('bazi-d').innerText = s2t(bazi.getDay());
             document.getElementById('bazi-h').innerText = s2t(bazi.getTime());
-            document.getElementById('vipZodiac').innerText = zodiac;
+            // ⚠️ 重要：我刪除了這裡原本會報錯的 vipZodiac 行
 
             const categories = [{id: 'wealth', label: '💰 財運'}, {id: 'love', label: '🍑 桃花'}, {id: 'work', label: '💼 社畜'}, {id: 'health', label: '🔋 健康'}, {id: 'luck', label: '🌟 貴人'}];
             let barsHTML = "";
@@ -304,17 +280,15 @@
                 請回傳 JSON: { "advice": "...", "vip_cheat_sheet": "...", "vip_life_comment": "..." }
             `;
 
-            // ⚠️ 呼叫 GAS (不放 Key)
             const response = await fetch(GAS_URL, {
                 method: 'POST',
-                headers: { 'Content-Type': 'text/plain' }, // 避開 CORS preflight
+                headers: { 'Content-Type': 'text/plain' },
                 body: JSON.stringify({ prompt: prompt })
             });
 
             if (!response.ok) throw new Error("GAS Error");
             const data = await response.json();
             
-            // 如果 GAS 回傳 error
             if(data.error) throw new Error(data.error);
 
             let rawText = "";
