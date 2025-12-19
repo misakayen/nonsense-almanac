@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>廢話農民曆 v1.27 (除錯版)</title>
+    <title>廢話農民曆 v1.28 (強固防呆版)</title>
     <link rel="manifest" href="manifest.json">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -149,7 +149,7 @@
 
 <script>
     // ===========================================
-    // ⚠️ 這裡填入 GAS 網址 (xxxx 記得換掉)
+    // ⚠️ 這裡填入你的 GAS 網址 (結尾是 /exec)
     const GAS_URL = "https://script.google.com/macros/s/AKfycbyoa6WVL06HPmBn-UJrfIFKX5h3-DfTDl4iigFXSv8XGTaOz7_5ahwq5uzMDzOHejdK/exec"; 
     // ===========================================
 
@@ -248,7 +248,6 @@
             document.getElementById('bazi-m').innerText = s2t(bazi.getMonth());
             document.getElementById('bazi-d').innerText = s2t(bazi.getDay());
             document.getElementById('bazi-h').innerText = s2t(bazi.getTime());
-            // ⚠️ 重要：我刪除了這裡原本會報錯的 vipZodiac 行
 
             const categories = [{id: 'wealth', label: '💰 財運'}, {id: 'love', label: '🍑 桃花'}, {id: 'work', label: '💼 社畜'}, {id: 'health', label: '🔋 健康'}, {id: 'luck', label: '🌟 貴人'}];
             let barsHTML = "";
@@ -282,7 +281,7 @@
 
             const response = await fetch(GAS_URL, {
                 method: 'POST',
-                headers: { 'Content-Type': 'text/plain' },
+                headers: { 'Content-Type': 'text/plain' }, // 避開 CORS preflight
                 body: JSON.stringify({ prompt: prompt })
             });
 
@@ -296,19 +295,35 @@
                 rawText = data.candidates[0].content.parts[0].text;
             } else {
                 console.log("GAS Data:", data);
+                // 如果格式跑掉，嘗試直接用 data.text 或類似屬性
+                if (data.text) rawText = data.text;
+                else rawText = JSON.stringify(data); // 最後手段
             }
             
             const jsonStr = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
-            const result = JSON.parse(jsonStr);
+            let result;
+            try {
+                result = JSON.parse(jsonStr);
+            } catch (e) {
+                console.error("JSON Parse Error", jsonStr);
+                throw new Error("AI 回傳格式錯誤");
+            }
 
-            document.getElementById('resultAdvice').innerText = result.advice;
-            document.getElementById('vipCheatSheet').innerHTML = result.vip_cheat_sheet.replace(/\n/g, '<br>');
-            document.getElementById('vipLifeComment').innerText = result.vip_life_comment;
+            // 防呆：確保欄位存在
+            document.getElementById('resultAdvice').innerText = result.advice || "AI 正在放空...";
+            
+            // 防呆：vip_cheat_sheet 可能是字串或陣列
+            let cheatText = result.vip_cheat_sheet;
+            if (Array.isArray(cheatText)) cheatText = cheatText.join('<br>');
+            if (typeof cheatText === 'string') cheatText = cheatText.replace(/\n/g, '<br>');
+            document.getElementById('vipCheatSheet').innerHTML = cheatText || "宜：看開一點<br>忌：太認真";
+
+            document.getElementById('vipLifeComment').innerText = result.vip_life_comment || "命運掌握在自己手裡。";
 
         } catch (e) {
             console.warn("AI 失敗:", e);
-            document.getElementById('resultAdvice').innerText = "AI 睡著了，請檢查 GAS 部署是否正確。";
-            document.getElementById('vipCheatSheet').innerText = "宜：看開一點\n忌：太認真";
+            document.getElementById('resultAdvice').innerText = "AI 睡著了...請稍後再試。";
+            document.getElementById('vipCheatSheet').innerHTML = "宜：休息<br>忌：Debug";
         } finally {
             document.getElementById('aiLoading').style.display = 'none';
         }
