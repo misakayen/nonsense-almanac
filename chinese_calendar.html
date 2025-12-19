@@ -2,9 +2,8 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>廢話農民曆 v1.29 (體驗升級版)</title>
-    <link rel="manifest" href="manifest.json">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>廢話農民曆 v1.37</title>
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -15,105 +14,58 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
     <style>
-        body { font-family: "Microsoft JhengHei", "Heiti TC", sans-serif; background-color: #f0f2f5; color: #333; display: flex; align-items: start; justify-content: center; min-height: 100vh; margin: 0; padding: 20px 10px; box-sizing: border-box; overflow-x: hidden; touch-action: manipulation; }
-        
-        /* 寬度調整：手機版佔滿，電腦版限制寬度 */
-        .container { width: 100%; max-width: 480px; position: relative; padding-bottom: 50px; margin: 0 auto; }
-        
-        .page { background: white; border-radius: 24px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); text-align: center; display: none; margin-bottom: 20px; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background-color: #f0f2f5; color: #333; display: flex; align-items: start; justify-content: center; min-height: 100vh; margin: 0; padding: 20px 10px; padding-top: env(safe-area-inset-top); box-sizing: border-box; overflow-x: hidden; touch-action: manipulation; user-select: none; -webkit-user-select: none; }
+        .container { width: 100%; max-width: 480px; padding-bottom: 80px; margin: 0 auto; }
+        ::-webkit-scrollbar { display: none; }
+        .page { background: white; border-radius: 24px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); text-align: center; display: none; margin-bottom: 20px; }
         #page-input { padding: 40px 30px; display: block; } 
         #page-result { padding: 0; background: transparent; box-shadow: none; } 
         #page-calendar { padding: 20px; } #page-fortune { padding: 30px 20px; }
-
-        .input-group { margin-bottom: 15px; text-align: left; }
-        .input-row { display: flex; gap: 10px; width: 100%; }
-        .input-row input { flex: 1; min-width: 0; }
-        input { width: 100%; padding: 14px; font-size: 16px; border: 2px solid #eee; border-radius: 12px; box-sizing: border-box; outline: none; text-align: center; font-family: inherit; background: #fafafa; }
+        input { width: 100%; padding: 16px; font-size: 18px; border: 2px solid #eee; border-radius: 16px; box-sizing: border-box; outline: none; text-align: center; background: #fafafa; font-weight: bold; -webkit-appearance: none; }
         input:focus { border-color: #2c3e50; background: #fff; }
-        .label-text { font-size: 14px; color: #666; margin-bottom: 5px; display: block; text-align: left; padding-left: 5px; font-weight: bold;}
-
-        .relation-switch { display: flex; gap: 10px; margin-top: 5px; }
-        .relation-option { flex: 1; }
-        .relation-option input { display: none; }
-        .relation-option label { display: block; padding: 10px; border: 2px solid #eee; border-radius: 10px; text-align: center; cursor: pointer; font-size: 14px; color: #aaa; transition: 0.2s; }
-        .relation-option input:checked + label.love { border-color: #e84393; background: #fff0f6; color: #e84393; font-weight: bold; }
-        .relation-option input:checked + label.hate { border-color: #2c3e50; background: #ecf0f1; color: #2c3e50; font-weight: bold; }
-
-        .btn { background-color: #2c3e50; color: white; border: none; border-radius: 12px; padding: 16px; font-size: 16px; font-weight: bold; cursor: pointer; width: 100%; margin-bottom: 10px; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;}
-        .btn:disabled { background-color: #95a5a6; cursor: not-allowed; opacity: 0.7; }
-        .btn-fortune { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; box-shadow: 0 4px 15px rgba(118, 75, 162, 0.4); }
-        .btn-secondary { background-color: #ecf0f1; color: #7f8c8d; }
-        .btn-action { background-color: #e74c3c; } 
-        .btn-ig { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: white; box-shadow: 0 4px 15px rgba(220, 39, 67, 0.4); }
-        .btn-info { background-color: #3498db; } .btn-outline { background: transparent; border: 2px solid #2c3e50; color: #2c3e50; }
-
-        /* 結果卡片 (白卡) */
-        .result-card { background: #fffdf5; padding: 30px 20px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 4px solid #2c3e50; position: relative; margin-bottom: 20px; text-align: center; overflow: hidden; width: 100%; box-sizing: border-box; }
+        .label-text { font-size: 14px; color: #666; margin-bottom: 8px; display: block; text-align: left; padding-left: 5px; font-weight: bold;}
+        .input-group { margin-bottom: 20px; text-align: left; }
+        .btn { background-color: #2c3e50; color: white; border: none; border-radius: 16px; padding: 18px; font-size: 18px; font-weight: bold; cursor: pointer; width: 100%; margin-bottom: 15px; transition: transform 0.1s; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 10px rgba(44, 62, 80, 0.2); }
+        .btn:active { transform: scale(0.98); } 
+        .btn-fortune { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); box-shadow: 0 4px 15px rgba(118, 75, 162, 0.3); }
+        .btn-secondary { background-color: #ecf0f1; color: #7f8c8d; box-shadow: none; }
+        .btn-action { background-color: #e74c3c; box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3); } 
+        .btn-ig { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); box-shadow: 0 4px 15px rgba(220, 39, 67, 0.3); }
+        .btn-info { background-color: #3498db; box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3); } 
+        .relation-switch { display: flex; gap: 10px; margin-top: 5px; } .relation-option { flex: 1; } .relation-option input { display: none; } .relation-option label { display: block; padding: 12px; border: 2px solid #eee; border-radius: 12px; text-align: center; font-size: 15px; color: #aaa; font-weight: bold; } .relation-option input:checked + label.love { border-color: #e84393; background: #fff0f6; color: #e84393; } .relation-option input:checked + label.hate { border-color: #2c3e50; background: #ecf0f1; color: #2c3e50; }
+        .result-card { background: #fffdf5; padding: 30px 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 4px solid #2c3e50; position: relative; margin-bottom: 20px; text-align: center; }
         .result-card::before { content: ""; position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 20px; height: 20px; background: #f0f2f5; border: 4px solid #2c3e50; border-radius: 50%; z-index: 2; }
-        
         .mascot-img { width: 180px; height: 180px; object-fit: contain; margin: 10px auto; display: block; animation: fadeIn 0.5s ease-in; }
-        
         .card-header { border-bottom: 2px dashed #ccc; padding-bottom: 15px; margin-bottom: 15px; }
-        .card-name { font-size: 22px; font-weight: 900; color: #d35400; margin-bottom: 5px; display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap;}
-        .zodiac-badge { font-size: 12px; background: #2c3e50; color: #fff; padding: 2px 8px; border-radius: 10px; font-weight: normal; vertical-align: middle; }
-        
+        .card-name { font-size: 24px; font-weight: 900; color: #d35400; margin-bottom: 5px; display: flex; align-items: center; justify-content: center; gap: 8px;}
+        .zodiac-badge { font-size: 13px; background: #2c3e50; color: #fff; padding: 3px 10px; border-radius: 12px; vertical-align: middle; }
         .card-date { font-size: 14px; color: #666; } .card-lunar { font-size: 14px; color: #e74c3c; margin-top: 5px; }
-        
-        .main-word { font-size: 72px; font-weight: 900; color: #2c3e50; margin: 10px 0; line-height: 1; text-shadow: 2px 2px 0px rgba(0,0,0,0.1); }
-        .mood-tag { display: inline-block; background: #2c3e50; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; margin-bottom: 15px; }
-        
-        .lucky-dash { display: flex; justify-content: space-around; margin: 20px 0; background: white; padding: 15px 5px; border-radius: 12px; border: 1px dashed #ccc; font-size: 13px; }
+        .main-word { font-size: 80px; font-weight: 900; color: #2c3e50; margin: 5px 0; line-height: 1; text-shadow: 3px 3px 0px rgba(0,0,0,0.1); }
+        .mood-tag { display: inline-block; background: #2c3e50; color: white; padding: 5px 15px; border-radius: 20px; font-size: 13px; margin-bottom: 15px; }
+        .lucky-dash { display: flex; justify-content: space-around; margin: 20px 0; background: white; padding: 15px 5px; border-radius: 16px; border: 1px dashed #ccc; }
         .lucky-item { text-align: center; width: 25%; position: relative; }
         .lucky-item:not(:last-child)::after { content: ""; position: absolute; right: 0; top: 10%; height: 80%; width: 1px; background: #eee; }
-        .lucky-label { color: #aaa; margin-bottom: 3px; font-size: 11px; }
-        .lucky-val { font-weight: bold; font-size: 14px; color: #2c3e50; }
-
-        .advice-text { font-size: 16px; line-height: 1.7; color: #444; margin-top: 15px; text-align: justify; padding: 20px; background: rgba(0,0,0,0.03); border-radius: 12px; min-height: 60px; font-weight: 500; }
-
-        /* VIP 黑金卡 (第二張卡片) */
-        .vip-card { 
-            display: none; /* 預設隱藏 */
-            background: linear-gradient(135deg, #1f1c2c, #928DAB); /* 黑金質感 */
-            background: #222;
-            color: #f1c40f; 
-            padding: 30px 20px; 
-            border-radius: 16px; 
-            margin-bottom: 20px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4); 
-            border: 2px solid #f1c40f; 
-            text-align: center;
-            animation: slideUp 0.6s ease-out;
-        }
+        .lucky-label { color: #aaa; margin-bottom: 4px; font-size: 11px; }
+        .lucky-val { font-weight: bold; font-size: 15px; color: #2c3e50; }
+        .advice-text { font-size: 17px; line-height: 1.7; color: #444; margin-top: 15px; text-align: justify; padding: 20px; background: rgba(0,0,0,0.03); border-radius: 16px; min-height: 60px; font-weight: 500; }
+        .vip-card { display: none; background: #222; color: #f1c40f; padding: 30px 20px; border-radius: 20px; margin-bottom: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.5); border: 2px solid #f1c40f; text-align: center; animation: slideUp 0.6s ease-out; }
         @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
-        .vip-title { color: #222; background: #f1c40f; font-weight: 900; font-size: 16px; margin-bottom: 20px; display: inline-block; padding: 5px 15px; border-radius: 20px; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 0 10px #f1c40f; }
+        .vip-title { color: #222; background: #f1c40f; font-weight: 900; font-size: 16px; margin-bottom: 20px; display: inline-block; padding: 6px 18px; border-radius: 20px; text-transform: uppercase; letter-spacing: 1px; }
+        .power-bar-container { margin-bottom: 15px; } .power-label { font-size: 14px; display: flex; justify-content: space-between; margin-bottom: 6px; color: #ecf0f1; font-weight: bold;} .progress-bg { background: rgba(255,255,255,0.15); height: 12px; border-radius: 6px; overflow: hidden; } .progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #f1c40f, #e67e22); transition: width 1.5s ease-out; box-shadow: 0 0 10px rgba(241, 196, 15, 0.5); } .cheat-box { background: rgba(255,255,255,0.08); padding: 20px; border-radius: 16px; border: 1px solid rgba(241, 196, 15, 0.3); margin: 25px 0; text-align: left; } .cheat-text { color: #ecf0f1; font-size: 15px; line-height: 1.8; } .bazi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 20px 0; background: rgba(255,255,255,0.1); padding: 15px; border-radius: 12px; } .bazi-col { text-align: center; } .bazi-label { font-size: 12px; color: #aaa; margin-bottom: 4px; } .bazi-val { font-size: 20px; font-weight: bold; color: #f1c40f; }
         
-        .power-bar-container { margin-bottom: 12px; }
-        .power-label { font-size: 13px; display: flex; justify-content: space-between; margin-bottom: 4px; color: #ecf0f1; }
-        .progress-bg { background: rgba(255,255,255,0.1); height: 10px; border-radius: 5px; overflow: hidden; }
-        .progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #f1c40f, #e67e22); transition: width 1.5s ease-out; box-shadow: 0 0 5px #f1c40f; }
-        
-        .cheat-box { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; border: 1px solid rgba(241, 196, 15, 0.3); margin: 20px 0; text-align: left; }
-        .cheat-text { color: #ecf0f1; font-size: 14px; line-height: 1.8; }
-
-        .bazi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin: 15px 0; background: rgba(255,255,255,0.1); padding: 10px; border-radius: 8px; }
-        .bazi-col { text-align: center; } .bazi-label { font-size: 11px; color: #aaa; } .bazi-val { font-size: 18px; font-weight: bold; color: #f1c40f; }
-
-        /* 解鎖按鈕區 */
-        .unlock-area { text-align: center; margin-bottom: 20px; }
-        .btn-unlock-trigger { background: linear-gradient(45deg, #111, #333); color: #f1c40f; border: 1px solid #f1c40f; padding: 15px 25px; border-radius: 30px; font-size: 14px; font-weight: bold; cursor: pointer; animation: pulse 2s infinite; display: inline-flex; align-items: center; gap: 5px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        @keyframes pulse { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(241, 196, 15, 0.4); } 70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(241, 196, 15, 0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(241, 196, 15, 0); } }
-
-        .footer-note { font-size: 10px; color: #bbb; margin-top: 15px; text-align: center; letter-spacing: 1px; }
-        .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.98); z-index: 999; display: none; flex-direction: column; align-items: center; justify-content: center; }
+        #paywall-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; align-items: center; justify-content: center; backdrop-filter: blur(8px); }
+        .paywall-content { background: white; width: 85%; max-width: 360px; border-radius: 24px; padding: 30px 20px; text-align: center; position: relative; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .pay-icon { font-size: 60px; margin-bottom: 15px; display: block; }
+        .pay-title { font-size: 24px; font-weight: 900; color: #2c3e50; margin-bottom: 10px; }
+        .pay-desc { font-size: 15px; color: #666; margin-bottom: 25px; line-height: 1.5; }
+        .btn-ad { background: linear-gradient(135deg, #3498db, #2980b9); width: 100%; margin-bottom: 10px; border: none; padding: 15px; border-radius: 12px; color: white; font-weight: bold; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;}
+        .btn-buy { background: linear-gradient(135deg, #f1c40f, #e67e22); width: 100%; border: none; padding: 15px; border-radius: 12px; color: white; font-weight: bold; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;}
+        .btn-close-pay { position: absolute; top: 15px; right: 15px; background: #eee; border-radius: 50%; width: 30px; height: 30px; border: none; font-weight: bold; color: #888; cursor: pointer; }
+        .footer-note { font-size: 11px; color: #bbb; margin-top: 20px; text-align: center; letter-spacing: 1px; }
+        .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.98); z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; }
         .spinner { width: 50px; height: 50px; border: 5px solid #f3f3f3; border-top: 5px solid #2c3e50; border-radius: 50%; animation: spin 1s linear infinite; } @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        /* 其他原有樣式 */
-        .fortune-shaker { font-size: 80px; margin: 30px 0; cursor: pointer; display: inline-block; transition: transform 0.2s; } @keyframes shake { 0% { transform: translate(1px, 1px) rotate(0deg); } 10% { transform: translate(-1px, -2px) rotate(-1deg); } 50% { transform: translate(-1px, 2px) rotate(-1deg); } 100% { transform: translate(1px, -2px) rotate(-1deg); } } .shaking { animation: shake 0.5s; animation-iteration-count: infinite; } 
-        .poem-card { background-color: #fff; border: 2px solid #2c3e50; padding: 20px; margin-top: 20px; display: none; animation: slideUp 0.5s ease-out; } 
-        .poem-title { color: #c0392b; font-weight: bold; font-size: 24px; margin-bottom: 10px; border-bottom: 2px solid #c0392b; display: inline-block; padding-bottom: 5px; } .poem-content { font-size: 18px; line-height: 1.8; color: #333; margin: 15px 0; font-family: "KaiTi", "BiauKai", serif; font-weight: bold; } .poem-note { font-size: 12px; color: #888; margin-top: 10px; } 
-        .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; } .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; text-align: center; } .cal-cell { padding: 8px 2px; border-radius: 8px; cursor: pointer; border: 1px solid transparent; } .cal-cell:hover { background-color: #f0f2f5; } .is-today { background-color: #2c3e50; color: white; } 
-        #detail-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; align-items: center; justify-content: center; } .detail-content { background: white; width: 85%; max-width: 350px; border-radius: 15px; padding: 20px; max-height: 80vh; overflow-y: auto; text-align: left; border-top: 10px solid #c0392b; } .detail-row { margin-bottom: 12px; font-size: 14px; border-bottom: 1px dashed #eee; padding-bottom: 8px; } .detail-label { font-weight: bold; color: #555; display: block; margin-bottom: 4px; } .close-btn { background: #eee; color: #555; padding: 10px; text-align: center; border-radius: 8px; cursor: pointer; margin-top: 20px; font-weight: bold; } h2 { margin-top: 0; color: #2c3e50; font-size: 24px; }
+        .fortune-shaker { font-size: 100px; margin: 40px 0; cursor: pointer; display: inline-block; transition: transform 0.2s; } @keyframes shake { 0% { transform: translate(1px, 1px) rotate(0deg); } 10% { transform: translate(-1px, -2px) rotate(-1deg); } 50% { transform: translate(-1px, 2px) rotate(-1deg); } 100% { transform: translate(1px, -2px) rotate(-1deg); } } .shaking { animation: shake 0.5s; animation-iteration-count: infinite; } .poem-card { background-color: #fff; border: 3px solid #2c3e50; padding: 25px; margin-top: 25px; display: none; animation: slideUp 0.5s ease-out; border-radius: 16px; } .poem-title { color: #c0392b; font-weight: bold; font-size: 28px; margin-bottom: 15px; border-bottom: 2px solid #c0392b; display: inline-block; padding-bottom: 5px; } .poem-content { font-size: 20px; line-height: 1.8; color: #333; margin: 20px 0; font-family: "KaiTi", "BiauKai", serif; font-weight: bold; } .poem-note { font-size: 14px; color: #888; margin-top: 10px; } .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; } .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; text-align: center; } .cal-cell { padding: 10px 2px; border-radius: 10px; cursor: pointer; border: 1px solid transparent; font-size: 16px;} .cal-cell:hover { background-color: #f0f2f5; } .is-today { background-color: #2c3e50; color: white; } #detail-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 9999; align-items: center; justify-content: center; backdrop-filter: blur(5px); } .detail-content { background: white; width: 85%; max-width: 350px; border-radius: 20px; padding: 25px; max-height: 80vh; overflow-y: auto; text-align: left; border-top: 10px solid #c0392b; box-shadow: 0 10px 40px rgba(0,0,0,0.3); } .detail-row { margin-bottom: 15px; font-size: 15px; border-bottom: 1px dashed #eee; padding-bottom: 10px; } .detail-label { font-weight: bold; color: #555; display: block; margin-bottom: 5px; } .close-btn { background: #eee; color: #555; padding: 12px; text-align: center; border-radius: 12px; cursor: pointer; margin-top: 25px; font-weight: bold; } h2 { margin-top: 0; color: #2c3e50; font-size: 24px; } .input-row input { background: #fff; }
     </style>
 </head>
 <body>
@@ -122,63 +74,42 @@
     <div id="page-input" class="page">
         <div class="date-label" id="dateDisplayInput" style="color:#aaa; font-size:14px; margin-bottom:5px;">...</div>
         <h2>今日運勢診斷</h2>
-        <div class="input-group"><label class="label-text">你的大名：</label><input type="text" id="userName" placeholder="請輸入姓名" maxlength="10"></div>
-        <div class="input-group"><label class="label-text" style="color:#6c5ce7;">(選填) 對象姓名：</label><input type="text" id="targetName" placeholder="輸入你想算的那個人..." maxlength="10">
+        <div class="input-group"><label class="label-text">你的大名</label><input type="text" id="userName" placeholder="請輸入姓名" maxlength="10"></div>
+        <div class="input-group"><label class="label-text" style="color:#6c5ce7;">對象姓名 (選填)</label>
             <div class="relation-switch"><div class="relation-option"><input type="radio" id="rel-love" name="relation" value="love" checked><label for="rel-love" class="love">💘 算姻緣 (撩)</label></div><div class="relation-option"><input type="radio" id="rel-hate" name="relation" value="hate"><label for="rel-hate" class="hate">💣 算孽緣 (罵)</label></div></div>
+            <div class="input-row" style="margin-top:10px;"><input type="text" id="targetName" placeholder="輸入想算的人..." maxlength="10"></div>
         </div>
-        <div class="input-group"><label class="label-text">你的心情狀態：</label><input type="text" id="userMood" placeholder="例：很煩、想離職" maxlength="20"></div>
-        <div class="input-group"><label class="label-text">你的生辰 (算八字用)：</label><div class="input-row"><input type="date" id="userBirthDate" value="1995-01-01"><input type="time" id="userBirthTime" value="12:00"></div></div>
-        <button id="aiBtn" class="btn" onclick="tryAIAnalysis()">🔮 靈魂分析</button>
-        <button class="btn btn-fortune" onclick="goToFortune()">🀄 搖一搖求籤</button>
-        <button class="btn btn-outline" onclick="goToCalendar()">📅 查看農民曆</button>
+        <div class="input-group"><label class="label-text">目前心情</label><input type="text" id="userMood" placeholder="例：很煩、想離職" maxlength="20"></div>
+        <div class="input-group"><label class="label-text">出生日期 (算八字)</label><div class="input-row"><input type="date" id="userBirthDate" value="1995-01-01"><input type="time" id="userBirthTime" value="12:00"></div></div>
+        <button id="aiBtn" class="btn btn-fortune" onclick="startOfflineAnalysis()">🔮 開始靈魂分析 (免費)</button> 
+        <button class="btn btn-secondary" onclick="goToFortune()">🀄 搖一搖求籤</button>
+        <button class="btn btn-secondary" onclick="goToCalendar()">📅 查看農民曆</button>
+        <div id="dbStatus" style="font-size:10px; color:#ccc; margin-top:5px; text-align:center;">資料庫載入中...</div>
     </div>
 
     <div id="page-result" class="page" style="background:transparent; box-shadow:none;">
         <div class="loading-overlay" id="aiLoading"><div class="spinner"></div><p style="margin-top:15px; color:#2c3e50; font-weight:bold;">🥔 廢廢薯正在通靈...</p></div>
         
         <div class="result-card" id="captureArea">
-            <div class="card-header">
-                <div class="card-name">
-                    <span id="resName"></span>
-                    <span class="zodiac-badge" id="resZodiacBadge"></span>
-                </div>
-                <div class="card-date" id="resDate"></div>
-                <div class="card-lunar" id="resLunar"></div>
-            </div>
+            <div class="card-header"><div class="card-name"><span id="resName"></span><span class="zodiac-badge" id="resZodiacBadge"></span></div><div class="card-date" id="resDate"></div><div class="card-lunar" id="resLunar"></div></div>
             <img src="./potato.png" id="mascotImage" class="mascot-img" alt="Mascot" onerror="this.src='./potato.png';">
-            <div class="main-word" id="resultWord">...</div>
-            <div class="mood-tag" id="resMoodTag">...</div>
+            <div class="main-word" id="resultWord">...</div><div class="mood-tag" id="resMoodTag">...</div>
             <div id="luckyDashboard"></div>
-            <div class="advice-text" id="resultAdvice"></div>
+            <div class="advice-text" id="resultAdvice"></div> 
             <div class="footer-note">★ 廢話農民曆 Nonsense Almanac ★</div>
         </div>
 
-        <div class="unlock-area" id="unlockArea">
-            <button class="btn-unlock-trigger" onclick="unlockVip()">
-                🔓 解鎖 VIP 天機詳批 (模擬付費)
-            </button>
-        </div>
+        <div class="unlock-area" id="unlockArea"><button class="btn-unlock-trigger" onclick="unlockVip()">🔓 解鎖 AI 天機詳批 (需連線)</button></div>
 
         <div class="vip-card" id="vipCard">
             <div class="vip-title">👑 VIP 天機詳批</div>
-            
-            <p style="font-weight:bold; color:#f1c40f; margin:10px 0 5px 0;">📊 今日戰力指數</p>
-            <div id="powerBars"></div>
-
-            <p style="font-weight:bold; color:#f1c40f; margin:20px 0 5px 0;">⚡ 今日作弊代碼</p>
-            <div class="cheat-box">
-                <div id="vipCheatSheet" class="cheat-text">...</div>
-            </div>
-
+            <p style="font-weight:bold; color:#f1c40f; margin:10px 0 5px 0;">📊 今日戰力指數</p><div id="powerBars"></div>
+            <p style="font-weight:bold; color:#f1c40f; margin:20px 0 5px 0;">⚡ 今日作弊代碼 (AI)</p>
+            <div class="cheat-box"><div id="vipCheatSheet" class="cheat-text">需解鎖才能觀看...</div></div>
             <p style="font-weight:bold; color:#f1c40f; margin:15px 0 5px 0;">🔮 八字命盤</p>
-            <div class="bazi-grid">
-                <div class="bazi-col"><div class="bazi-label">年</div><div class="bazi-val" id="bazi-y"></div></div>
-                <div class="bazi-col"><div class="bazi-label">月</div><div class="bazi-val" id="bazi-m"></div></div>
-                <div class="bazi-col"><div class="bazi-label">日</div><div class="bazi-val" id="bazi-d"></div></div>
-                <div class="bazi-col"><div class="bazi-label">時</div><div class="bazi-val" id="bazi-h"></div></div>
-            </div>
-            <p id="vipLifeComment" style="margin-top:15px; font-size:13px; color:#bdc3c7; line-height:1.6;"></p>
-            
+            <div class="bazi-grid"><div class="bazi-col"><div class="bazi-label">年</div><div class="bazi-val" id="bazi-y"></div></div><div class="bazi-col"><div class="bazi-label">月</div><div class="bazi-val" id="bazi-m"></div></div><div class="bazi-col"><div class="bazi-label">日</div><div class="bazi-val" id="bazi-d"></div></div><div class="bazi-col"><div class="bazi-label">時</div><div class="bazi-val" id="bazi-h"></div></div></div>
+            <p style="font-weight:bold; color:#f1c40f; margin:15px 0 5px 0;">📜 AI 人生評語</p>
+            <p id="vipLifeComment" style="margin-top:5px; font-size:13px; color:#bdc3c7; line-height:1.6;">需解鎖才能觀看...</p>
             <button class="btn-action" onclick="downloadImage('full')" style="margin-top:20px;">📸 下載完整天機圖</button>
         </div>
 
@@ -189,6 +120,17 @@
         </div>
     </div>
 
+    <div id="paywall-modal">
+        <div class="paywall-content">
+            <button class="btn-close-pay" onclick="document.getElementById('paywall-modal').style.display='none'">×</button>
+            <span class="pay-icon">🚫</span>
+            <div class="pay-title">今日 AI 額度已用完</div>
+            <div class="pay-desc">您的 AI 深度分析次數已達上限。<br>基本運勢 (離線版) 可無限使用。</div>
+            <button class="btn-ad" onclick="watchAd()">📺 看廣告恢復 AI 連線</button>
+            <button class="btn-buy" onclick="buyPro()">👑 NT$99 終身無限暢玩</button>
+        </div>
+    </div>
+
     <div id="page-fortune" class="page"><h2 >賽博求籤筒</h2><div class="fortune-shaker" id="shaker" onclick="drawFortune()">🀄</div><div id="shakingText" style="display:none; color:#d35400; font-weight:bold; margin-top:10px;">誠心祈求中...</div><div class="poem-card" id="poemCard"><div class="poem-title" id="poemTitle"></div><div class="poem-content" id="poemContent"></div><div class="poem-note" id="poemNote"></div></div><button class="btn btn-secondary" style="margin-top:30px;" onclick="resetApp()">🏠 回首頁</button></div>
     <div id="page-calendar" class="page"><div class="cal-header"><button class="btn-secondary" style="width:auto; margin:0;" onclick="changeMonth(-1)">◀</button><div style="font-weight:bold" id="calTitle"></div><button class="btn-secondary" style="width:auto; margin:0;" onclick="changeMonth(1)">▶</button></div><div class="cal-grid" id="calendarGrid"></div><button class="btn btn-secondary" style="margin-top:20px;" onclick="resetApp()">🏠 回首頁</button></div>
     <div id="detail-modal"><div class="detail-content"><div style="text-align:center;font-weight:bold;color:#c0392b;margin-bottom:15px;">黃曆詳情</div><div class="detail-row"><span class="detail-label">日期</span><span class="detail-val" id="d-date"></span></div><div class="detail-row"><span class="detail-label">干支</span><span class="detail-val" id="d-ganzhi"></span></div><div class="detail-row"><span class="detail-label">宜</span><span class="detail-val" id="d-yi" style="color:#d35400"></span></div><div class="detail-row"><span class="detail-label">忌</span><span class="detail-val" id="d-ji" style="color:#27ae60"></span></div><div class="detail-row"><span class="detail-label">沖煞</span><span class="detail-val" id="d-chong"></span></div><div class="detail-row"><span class="detail-label">財神</span><span class="detail-val" id="d-wealth"></span></div><div class="close-btn" onclick="closeDetails()">關閉</div></div></div>
@@ -196,18 +138,63 @@
 
 <script>
     // ===========================================
-    // ⚠️ 填入你的 GAS 網址
+    // ⚠️ 填入你的 GAS 網址 (xxxx 記得換掉)
     const GAS_URL = "https://script.google.com/macros/s/AKfycbyoa6WVL06HPmBn-UJrfIFKX5h3-DfTDl4iigFXSv8XGTaOz7_5ahwq5uzMDzOHejdK/exec"; 
+    // ⚠️ 密碼 (與 GAS 相同)
+    const APP_SECRET = "POTATO_APP_VIP_888";
     // ===========================================
+
+    // 預設備用資料庫 (防止 GAS 連線失敗時開天窗)
+    let textDatabase = {
+        self: { openings:["看你這副死樣子，"], bodies:{ default:["今天適合當廢物，"] }, closings:["加油好嗎？"] },
+        love: { openings:["別做夢了，"], bodies:{ default:["沒人愛你，"] }, closings:["乖乖單身吧。"] },
+        hate: { openings:["他今天運氣不錯，"], bodies:{ default:["忍一時風平浪靜，"] }, closings:["看開點。"] }
+    };
+    
+    // 心情字典 (預設空，等待雲端下載)
+    let moodDictionary = {};
 
     let currentDate = new Date();
     let calendarViewDate = new Date();
     let isProcessing = false;
+    let isVipUser = localStorage.getItem('potato_is_vip') === 'true';
 
-    // 數據庫 (保持不變)
+    // 擴充版 imgMap (心情字對應到現有圖)
+    const imgMap = {
+        "default": "./potato.png",
+        "衝": "./potato_charge.png", "charge": "./potato_charge.png",
+        "撩": "./potato_flirt.png", "flirt": "./potato_flirt.png",
+        "揪": "./potato_party.png", "party": "./potato_party.png",
+        "還": "./potato_pray.png", "pray": "./potato_pray.png",
+        "溜": "./potato_travel.png", "travel": "./potato_travel.png",
+        "拆": "./potato_break.png", "break": "./potato_break.png",
+        "撐": "./potato_heavy.png", "heavy": "./potato_heavy.png",
+        "躺": "./potato_sleep.png", "sleep": "./potato_sleep.png",
+        "龜": "./potato_turtle.png", "turtle": "./potato_turtle.png",
+        "冷": "./potato_freeze.png", "freeze": "./potato_freeze.png",
+        "雷": "./potato_shock.png", "shock": "./potato_shock.png",
+        "卡": "./potato_stuck.png", "stuck": "./potato_stuck.png",
+        "別": "./potato_stop.png", "stop": "./potato_stop.png",
+        "閃": "./potato_dodge.png", "dodge": "./potato_dodge.png",
+        "餓": "./potato_party.png",
+        "肥": "./potato_heavy.png",
+        "窮": "./potato_shock.png",
+        "色": "./potato_flirt.png",
+        "殺": "./potato_charge.png",
+        "累": "./potato_sleep.png",
+        "廢": "./potato_turtle.png",
+        "逃": "./potato_travel.png",
+        "哭": "./potato_freeze.png",
+        "笑": "./potato_party.png",
+        "呆": "./potato.png",
+        "夢": "./potato_sleep.png",
+        "病": "./potato_stuck.png",
+        "驚": "./potato_shock.png",
+        "賭": "./potato_rich.png"
+    };
+
     const almanacRules = { "開市": { word: "衝", img: "charge" }, "交易": { word: "衝", img: "charge" }, "入宅": { word: "揪", img: "party" }, "纳采": { word: "揪", img: "party" }, "嫁娶": { word: "撩", img: "flirt" }, "訂盟": { word: "撩", img: "flirt" }, "祭祀": { word: "還", img: "pray" }, "祈福": { word: "還", img: "pray" }, "出行": { word: "溜", img: "travel" }, "旅遊": { word: "溜", img: "travel" }, "動土": { word: "拆", img: "break" }, "破屋": { word: "拆", img: "break" }, "解除": { word: "拆", img: "break" }, "安床": { word: "躺", img: "sleep" }, "移徙": { word: "躺", img: "sleep" }, "治病": { word: "撐", img: "heavy" }, "安葬": { word: "冷", img: "freeze" }, "default": { word: "龜", img: "turtle" } };
     const badDayRules = { "出行": { word: "卡", img: "stuck" }, "嫁娶": { word: "冷", img: "freeze" }, "開市": { word: "雷", img: "shock" }, "動土": { word: "別", img: "stop" }, "會親友": { word: "閃", img: "dodge" } };
-    const imgMap = { "default": "./potato.png", "charge": "./potato_charge.png", "flirt": "./potato_flirt.png", "party": "./potato_party.png", "pray": "./potato_pray.png", "travel": "./potato_travel.png", "break": "./potato_break.png", "heavy": "./potato_heavy.png", "sleep": "./potato_sleep.png", "turtle": "./potato_turtle.png", "freeze": "./potato_freeze.png", "shock": "./potato_shock.png", "stuck": "./potato_stuck.png", "stop": "./potato_stop.png", "dodge": "./potato_dodge.png", "rich": "./potato_rich.png" };
     const poems = [ { title: "大吉廢", content: "今日宜躺不宜忙<br>老闆電話耳邊旁<br>薪水入帳最重要<br>其他皆是夢一場", note: "解曰：躺著就對了" }, { title: "中吉懶", content: "工作堆得像座山<br>不如先去爬枕山<br>夢裡什麼都有得<br>醒來繼續擺爛攤", note: "解曰：逃避雖可恥但有用" }, { title: "下下忙", content: "今日衰神在頭頂<br>千萬不要看憧憬<br>若是硬要出門去<br>記得帶把防身餅", note: "解曰：乖乖待在家" }, { title: "末吉餓", content: "五臟廟裡鬧空城<br>減肥計畫萬不能<br>珍珠奶茶來一杯<br>快樂似神仙下塵", note: "解曰：吃飽再說" } ]; 
     const luckyColors = ["#e74c3c|熱情紅", "#3498db|憂鬱藍", "#f1c40f|發財黃", "#2ecc71|韭菜綠", "#9b59b6|基情紫", "#34495e|加班黑", "#95a5a6|水泥灰", "#e67e22|過勞橘"];
     const luckyDirections = ["東方", "西方", "南方", "北方", "東北", "東南", "西北", "西南", "床上", "公司外"];
@@ -216,7 +203,6 @@
     function loadUserData() { const savedName = localStorage.getItem('potato_userName'); const savedBirthDate = localStorage.getItem('potato_birthDate'); const savedBirthTime = localStorage.getItem('potato_birthTime'); const savedTarget = localStorage.getItem('potato_targetName'); if (savedName) document.getElementById('userName').value = savedName; if (savedBirthDate) document.getElementById('userBirthDate').value = savedBirthDate; if (savedBirthTime) document.getElementById('userBirthTime').value = savedBirthTime; if (savedTarget) document.getElementById('targetName').value = savedTarget; }
     function saveUserData() { localStorage.setItem('potato_userName', document.getElementById('userName').value); localStorage.setItem('potato_birthDate', document.getElementById('userBirthDate').value); localStorage.setItem('potato_birthTime', document.getElementById('userBirthTime').value); localStorage.setItem('potato_targetName', document.getElementById('targetName').value); }
     function getSeededRandom(seed) { let h = 0xdeadbeef; for(let i = 0; i < seed.length; i++) h = Math.imul(h ^ seed.charCodeAt(i), 2654435761); return ((h ^ h >>> 16) >>> 0) / 4294967296; }
-    
     function calculateDailyLuck(date, zodiac) {
         const seed = `${date.getFullYear()}${date.getMonth()}${date.getDate()}-${zodiac}`;
         const rand = getSeededRandom(seed);
@@ -227,172 +213,269 @@
         const luckyTime = `${hour}:00 - ${hour+1}:00`;
         const dirIndex = Math.floor((rand * 50) % luckyDirections.length);
         const direction = luckyDirections[dirIndex];
-        const scores = {
-            wealth: Math.floor(getSeededRandom(seed + "wealth") * 60 + 40),
-            love: Math.floor(getSeededRandom(seed + "love") * 100),
-            work: Math.floor(getSeededRandom(seed + "work") * 100),
-            health: Math.floor(getSeededRandom(seed + "health") * 40 + 60),
-            luck: Math.floor(getSeededRandom(seed + "luck") * 100)
-        };
+        const scores = { wealth: Math.floor(getSeededRandom(seed+"w")*60+40), love: Math.floor(getSeededRandom(seed+"l")*100), work: Math.floor(getSeededRandom(seed+"wk")*100), health: Math.floor(getSeededRandom(seed+"h")*40+60), luck: Math.floor(getSeededRandom(seed+"lk")*100) };
         return { luckyNum, colorName, colorHex, luckyTime, direction, scores };
     }
 
-    function init() { updateDateDisplay(); loadUserData(); }
+    // 分析心情關鍵字 (讀取雲端字典)
+    function analyzeMoodToKeyword(userMood) {
+        if (!userMood || !moodDictionary) return null;
+        for (let dbKey in moodDictionary) {
+            const keywords = moodDictionary[dbKey];
+            if (Array.isArray(keywords)) {
+                for (let word of keywords) {
+                    if (userMood.includes(word)) return dbKey;
+                }
+            }
+        }
+        return null;
+    }
 
-    async function tryAIAnalysis() {
-        if (isProcessing) return;
-        if (!GAS_URL || GAS_URL.includes("xxxx")) { alert("請填入 GAS 部署網址！"); return; }
+    // 更新資料庫
+    async function updateTextDatabase() {
+        const localDB = localStorage.getItem('potato_text_db');
+        const lastUpdate = localStorage.getItem('potato_db_time');
+        const now = new Date().getTime();
+        let data = null;
 
+        // 1小時快取
+        if (localDB && lastUpdate && (now - lastUpdate < 3600000)) {
+            data = JSON.parse(localDB);
+            document.getElementById('dbStatus').innerText = "資料庫: 本地";
+        } else {
+            try {
+                const response = await fetch(GAS_URL);
+                if (!response.ok) throw new Error("Network error");
+                data = await response.json();
+                localStorage.setItem('potato_text_db', JSON.stringify(data));
+                localStorage.setItem('potato_db_time', now);
+                document.getElementById('dbStatus').innerText = "資料庫: 雲端最新";
+            } catch (e) {
+                console.warn("⚠️", e);
+                if (localDB) data = JSON.parse(localDB);
+                document.getElementById('dbStatus').innerText = "資料庫: 離線模式";
+            }
+        }
+
+        if (data) {
+            textDatabase = data;
+            if (data.config) moodDictionary = data.config;
+        }
+    }
+
+    function init() { 
+        updateDateDisplay(); 
+        loadUserData(); 
+        updateTextDatabase(); 
+    }
+
+    // 主程式：離線分析 (Hybrid Mode)
+    function startOfflineAnalysis() {
         saveUserData();
-        isProcessing = true;
-        const btn = document.getElementById('aiBtn');
-        const originalText = btn.innerText;
-        btn.disabled = true;
-        let cooldown = 5;
-        const timer = setInterval(() => { btn.innerText = `⏳ ${cooldown}s`; cooldown--; if (cooldown < 0) { clearInterval(timer); btn.disabled = false; btn.innerText = originalText; isProcessing = false; } }, 1000);
-
         showPage('page-result');
-        document.getElementById('aiLoading').style.display = 'flex';
-        // 重置 VIP 顯示狀態
+        document.getElementById('aiLoading').style.display = 'none';
         document.getElementById('vipCard').style.display = 'none';
         document.getElementById('unlockArea').style.display = 'block';
 
+        const name = document.getElementById('userName').value.trim() || "善男信女";
+        const targetName = document.getElementById('targetName').value.trim();
+        const mood = document.getElementById('userMood').value.trim() || "";
+        const birthDateStr = document.getElementById('userBirthDate').value;
+        const birthTimeStr = document.getElementById('userBirthTime').value;
+        const birthDate = new Date(birthDateStr);
+        const zodiac = getZodiacSign(birthDate);
+        const relationType = document.querySelector('input[name="relation"]:checked').value;
+
+        const destinySeed = `${currentDate.toDateString()}_${name}_${targetName}_${birthDateStr}`;
+
+        // 農民曆 (決定大字)
+        const lunar = Solar.fromDate(currentDate).getLunar();
+        let themeData = almanacRules["default"];
+        const yiList = lunar.getDayYi();
+        for(let act of yiList) { if(almanacRules[act]) { themeData = almanacRules[act]; break; } }
+        if (!themeData || themeData === almanacRules["default"]) { const jiList = lunar.getDayJi(); for(let act of jiList) { if(badDayRules[act]) { themeData = badDayRules[act]; break; } } }
+        if (!themeData) themeData = almanacRules["default"];
+
+        const luck = calculateDailyLuck(currentDate, zodiac);
+        const bazi = Solar.fromYmdHms(parseInt(birthDateStr.split('-')[0]), parseInt(birthDateStr.split('-')[1]), parseInt(birthDateStr.split('-')[2]), parseInt(birthTimeStr.split(':')[0]), 0, 0).getLunar().getEightChar();
+
+        // 視覺：強制跟隨農民曆
+        document.getElementById('resultWord').innerText = themeData.word;
+        document.getElementById('mascotImage').src = imgMap[themeData.img] || imgMap["default"];
+
+        document.getElementById('resName').innerText = targetName ? `${name} ⚔️ ${targetName}` : `${name} 的運勢`;
+        document.getElementById('resZodiacBadge').innerText = zodiac;
+        document.getElementById('resDate').innerText = `${currentDate.getFullYear()}.${currentDate.getMonth()+1}.${currentDate.getDate()}`;
+        document.getElementById('resLunar').innerText = `農曆 ${lunar.getMonthInChinese()}月${lunar.getDayInChinese()}`;
+        document.getElementById('resMoodTag').innerText = "心情：" + (mood || "...");
+
+        // 文案：優先看心情
+        let finalKeyword = analyzeMoodToKeyword(mood);
+        if (!finalKeyword) finalKeyword = themeData.word;
+
+        let dbMode = 'self';
+        if (targetName) dbMode = (relationType === 'love') ? 'love' : 'hate';
+        
+        const db = textDatabase[dbMode] || textDatabase.self;
+        const openList = db.openings || ["命運多舛，"];
+        const open = openList[Math.floor(getSeededRandom(destinySeed + "open") * openList.length)];
+        
+        const bodyMap = db.bodies || {};
+        let bodyList = bodyMap[finalKeyword] || bodyMap["default"] || Object.values(bodyMap)[0];
+        if (!bodyList || bodyList.length === 0) bodyList = ["無話可說，"];
+        const body = bodyList[Math.floor(getSeededRandom(destinySeed + "body") * bodyList.length)];
+        
+        const closeList = db.closings || ["好自為之。"];
+        const close = closeList[Math.floor(getSeededRandom(destinySeed + "close") * closeList.length)];
+
+        document.getElementById('resultAdvice').innerText = open + body + close;
+
+        // 圖表與八字
+        const luckyHTML = `<div class="lucky-dash"><div class="lucky-item"><div class="lucky-label">幸運色</div><div class="lucky-val" style="color:${luck.colorHex}">${luck.colorName}</div></div><div class="lucky-item"><div class="lucky-label">幸運數</div><div class="lucky-val">${luck.luckyNum}</div></div><div class="lucky-item"><div class="lucky-label">吉時</div><div class="lucky-val">${luck.luckyTime}</div></div><div class="lucky-item"><div class="lucky-label">吉位</div><div class="lucky-val">${luck.direction}</div></div></div>`;
+        document.getElementById('luckyDashboard').innerHTML = luckyHTML;
+
+        const categories = [{id: 'wealth', label: '💰 財運'}, {id: 'love', label: '🍑 桃花'}, {id: 'work', label: '💼 社畜'}, {id: 'health', label: '🔋 健康'}, {id: 'luck', label: '🌟 貴人'}];
+        let barsHTML = "";
+        categories.forEach(cat => {
+            const score = luck.scores[cat.id];
+            barsHTML += `<div class="power-bar-container"><div class="power-label"><span>${cat.label}</span><span class="score-val">${score}</span></div><div class="progress-bg"><div class="progress-fill" style="width:${score}%"></div></div></div>`;
+        });
+        document.getElementById('powerBars').innerHTML = barsHTML;
+
+        document.getElementById('bazi-y').innerText = s2t(bazi.getYear());
+        document.getElementById('bazi-m').innerText = s2t(bazi.getMonth());
+        document.getElementById('bazi-d').innerText = s2t(bazi.getDay());
+        document.getElementById('bazi-h').innerText = s2t(bazi.getTime());
+    }
+
+    function unlockVip(){
+        if (!isVipUser) {
+            const today = new Date().toDateString();
+            const usageData = JSON.parse(localStorage.getItem('potato_ai_usage') || '{}');
+            if (usageData.date !== today) { usageData.date = today; usageData.count = 0; }
+            if (usageData.count >= 1) { document.getElementById('paywall-modal').style.display = 'flex'; return; }
+        }
+        if(confirm("【模擬付費/廣告】解鎖 AI 深度分析？")) {
+            document.getElementById('unlockArea').style.display = 'none';
+            document.getElementById('vipCard').style.display = 'block';
+            document.getElementById('vipCard').scrollIntoView({behavior:'smooth', block:'start'});
+            callCloudAI(); 
+        }
+    }
+
+    async function callCloudAI() {
+        if (isProcessing) return;
+        isProcessing = true;
+        document.getElementById('vipCheatSheet').innerText = "AI 正在思考...";
+        document.getElementById('vipLifeComment').innerText = "AI 正在連線...";
+
+        const name = document.getElementById('userName').value;
+        const targetName = document.getElementById('targetName').value;
+        const relationType = document.querySelector('input[name="relation"]:checked').value;
+        const mood = document.getElementById('userMood').value;
+        const birthDateStr = document.getElementById('userBirthDate').value;
+        const birthTimeStr = document.getElementById('userBirthTime').value;
+        
+        const cacheKey = `potato_ai_${birthDateStr}_${currentDate.toDateString()}_${name}`;
+        const cachedData = localStorage.getItem(cacheKey);
+
+        if (cachedData) {
+            fillVipData(JSON.parse(cachedData));
+            isProcessing = false;
+            return;
+        }
+
+        const bazi = Solar.fromYmdHms(parseInt(birthDateStr.split('-')[0]), parseInt(birthDateStr.split('-')[1]), parseInt(birthDateStr.split('-')[2]), parseInt(birthTimeStr.split(':')[0]), 0, 0).getLunar().getEightChar();
+        let task1Prompt = targetName 
+            ? (relationType === "love" ? `使用者 ${name} 想問與對象 ${targetName} 的【戀愛姻緣】。請判斷今天適合告白、約會還是保持距離？(語氣曖昧撩人)` : `使用者 ${name} 想問與對象 ${targetName} 的【職場/孽緣/仇人關係】。請判斷今天適合嗆聲、開戰還是閃躲？(語氣毒舌腹黑)`)
+            : `請解釋為什麼在「${mood}」的心情下，今天適合做什麼。(語氣毒舌幽默)`;
+
+        const prompt = `
+            【System: You are a Taiwanese fortune teller AI. Output ONLY in Traditional Chinese (Taiwan/TW).】
+            心情：${mood}。八字年命：${s2t(bazi.getYearNaYin())}。
+            任務 1 (Advice): ${task1Prompt} (50字內)
+            任務 2 (Cheat Sheet): 給出 3 個具體的【今日作弊代碼】，例如「宜：喝珍奶」、「忌：回老闆訊息」、「幸運物：發票」。(簡短列點)
+            任務 3 (Vip Life): 針對這個八字年命的幽默人生評語。
+            請回傳 JSON: { "advice": "...", "vip_cheat_sheet": "...", "vip_life_comment": "..." }
+        `;
+
         try {
-            const name = document.getElementById('userName').value.trim() || "善男信女";
-            const targetName = document.getElementById('targetName').value.trim();
-            const relationType = document.querySelector('input[name="relation"]:checked').value;
-            const mood = document.getElementById('userMood').value.trim() || "不知道";
-            const birthDateStr = document.getElementById('userBirthDate').value;
-            const birthTimeStr = document.getElementById('userBirthTime').value;
-            const birthDate = new Date(birthDateStr);
-            const zodiac = getZodiacSign(birthDate);
-            const lunar = Solar.fromDate(currentDate).getLunar();
-            
-            let themeData = almanacRules["default"];
-            const yiList = lunar.getDayYi();
-            for(let act of yiList) { if(almanacRules[act]) { themeData = almanacRules[act]; break; } }
-            if (!themeData || themeData === almanacRules["default"]) { 
-                const jiList = lunar.getDayJi();
-                for(let act of jiList) { if(badDayRules[act]) { themeData = badDayRules[act]; break; } } 
-            }
-            if (!themeData) themeData = almanacRules["default"];
-
-            const mainWord = themeData.word;
-            const imgType = themeData.img;
-            const luck = calculateDailyLuck(currentDate, zodiac);
-
-            document.getElementById('resultWord').innerText = mainWord;
-            document.getElementById('mascotImage').src = imgMap[imgType] || imgMap["default"];
-            document.getElementById('resName').innerText = targetName ? `${name} ⚔️ ${targetName}` : `${name} 的今日運勢`;
-            // ✅ 更新星座 Badge
-            document.getElementById('resZodiacBadge').innerText = zodiac;
-            document.getElementById('resDate').innerText = `${currentDate.getFullYear()}.${currentDate.getMonth()+1}.${currentDate.getDate()}`;
-            document.getElementById('resLunar').innerText = `農曆 ${lunar.getMonthInChinese()}月${lunar.getDayInChinese()}`;
-            document.getElementById('resMoodTag').innerText = "心情：" + mood;
-
-            const [y, m, d] = birthDateStr.split('-').map(Number);
-            const [h, min] = birthTimeStr.split(':').map(Number);
-            const bazi = Solar.fromYmdHms(y, m, d, h, min, 0).getLunar().getEightChar();
-            document.getElementById('bazi-y').innerText = s2t(bazi.getYear());
-            document.getElementById('bazi-m').innerText = s2t(bazi.getMonth());
-            document.getElementById('bazi-d').innerText = s2t(bazi.getDay());
-            document.getElementById('bazi-h').innerText = s2t(bazi.getTime());
-
-            // 戰力圖
-            const categories = [{id: 'wealth', label: '💰 財運'}, {id: 'love', label: '🍑 桃花'}, {id: 'work', label: '💼 社畜'}, {id: 'health', label: '🔋 健康'}, {id: 'luck', label: '🌟 貴人'}];
-            let barsHTML = "";
-            categories.forEach(cat => {
-                const score = luck.scores[cat.id];
-                barsHTML += `<div class="power-bar-container"><div class="power-label"><span>${cat.label}</span><span class="score-val">${score}</span></div><div class="progress-bg"><div class="progress-fill" style="width:${score}%"></div></div></div>`;
-            });
-            document.getElementById('powerBars').innerHTML = barsHTML;
-
-            // 幸運表
-            const luckyHTML = `<div class="lucky-dash"><div class="lucky-item"><div class="lucky-label">幸運色</div><div class="lucky-val" style="color:${luck.colorHex}">${luck.colorName}</div></div><div class="lucky-item"><div class="lucky-label">幸運數</div><div class="lucky-val">${luck.luckyNum}</div></div><div class="lucky-item"><div class="lucky-label">吉時</div><div class="lucky-val">${luck.luckyTime}</div></div><div class="lucky-item"><div class="lucky-label">吉位</div><div class="lucky-val">${luck.direction}</div></div></div>`;
-            document.getElementById('luckyDashboard').innerHTML = luckyHTML;
-
-            let task1Prompt = targetName 
-                ? (relationType === "love" ? `使用者 ${name} 想問與對象 ${targetName} 的【戀愛姻緣】。幸運色${luck.colorName}。請判斷今天適合告白、約會還是保持距離？(語氣曖昧撩人)` : `使用者 ${name} 想問與對象 ${targetName} 的【職場/孽緣/仇人關係】。幸運色${luck.colorName}。請判斷今天適合嗆聲、開戰還是閃躲？(語氣毒舌腹黑)`)
-                : `請解釋為什麼在「${mood}」的心情下，今天最適合「${mainWord}」。(語氣毒舌幽默)`;
-
-            const prompt = `
-                【System: You are a Taiwanese fortune teller AI. Output ONLY in Traditional Chinese (Taiwan/TW).】
-                
-                今日農民曆關鍵字：【${mainWord}】。
-                使用者心情：${mood}。
-                使用者星座：${zodiac}。
-                八字年命：${s2t(bazi.getYearNaYin())}。
-
-                任務 1 (Advice): ${task1Prompt} (50字內)
-                任務 2 (Cheat Sheet): 給出 3 個具體的【今日作弊代碼】，例如「宜：喝珍奶」、「忌：回老闆訊息」、「幸運物：發票」。(簡短列點)
-                任務 3 (Vip Life): 針對這個八字年命的幽默人生評語。
-
-                請回傳 JSON: { "advice": "...", "vip_cheat_sheet": "...", "vip_life_comment": "..." }
-            `;
-
             const response = await fetch(GAS_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'text/plain' }, 
-                body: JSON.stringify({ prompt: prompt })
+                body: JSON.stringify({ prompt: prompt, secret: APP_SECRET })
             });
 
             if (!response.ok) throw new Error("GAS Error");
             const data = await response.json();
-            if(data.error) throw new Error(data.error);
+            if(data.error) throw new Error(JSON.stringify(data.error));
 
             let rawText = "";
-            if(data.candidates && data.candidates[0].content){
-                rawText = data.candidates[0].content.parts[0].text;
-            } else {
-                if (data.text) rawText = data.text;
-                else rawText = JSON.stringify(data);
-            }
+            if(data.candidates && data.candidates[0].content){ rawText = data.candidates[0].content.parts[0].text; } 
+            else { if (data.text) rawText = data.text; else rawText = JSON.stringify(data); }
             
             const jsonStr = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
-            let result;
-            try { result = JSON.parse(jsonStr); } catch (e) { throw new Error("AI 回傳格式錯誤"); }
+            let result = JSON.parse(jsonStr);
 
-            document.getElementById('resultAdvice').innerText = result.advice || "AI 正在放空...";
-            
-            let cheatText = result.vip_cheat_sheet;
-            if (Array.isArray(cheatText)) cheatText = cheatText.join('<br>');
-            if (typeof cheatText === 'string') cheatText = cheatText.replace(/\n/g, '<br>');
-            document.getElementById('vipCheatSheet').innerHTML = cheatText || "宜：看開一點<br>忌：太認真";
-
-            document.getElementById('vipLifeComment').innerText = result.vip_life_comment || "命運掌握在自己手裡。";
+            localStorage.setItem(cacheKey, JSON.stringify(result));
+            if (!isVipUser) incrementUsage();
+            fillVipData(result);
 
         } catch (e) {
             console.warn("AI 失敗:", e);
-            document.getElementById('resultAdvice').innerText = "AI 睡著了...請稍後再試。";
-            document.getElementById('vipCheatSheet').innerHTML = "宜：休息<br>忌：Debug";
+            document.getElementById('vipCheatSheet').innerHTML = "AI 連線失敗<br>請檢查網路: " + e.message;
         } finally {
-            document.getElementById('aiLoading').style.display = 'none';
+            isProcessing = false;
         }
     }
 
-    function unlockVip(){
-        if(confirm("【模擬付費】解鎖 VIP 天機詳批？")){
-            // 隱藏解鎖按鈕
-            document.getElementById('unlockArea').style.display = 'none';
-            // 顯示黑金卡 (帶動畫)
-            document.getElementById('vipCard').style.display = 'block';
-            // 自動捲動到黑金卡
-            document.getElementById('vipCard').scrollIntoView({behavior:'smooth', block:'start'});
+    function fillVipData(result) {
+        if(result.advice) document.getElementById('resultAdvice').innerText = result.advice;
+        let cheatText = result.vip_cheat_sheet;
+        if (Array.isArray(cheatText)) cheatText = cheatText.join('<br>');
+        if (typeof cheatText === 'string') cheatText = cheatText.replace(/\n/g, '<br>');
+        document.getElementById('vipCheatSheet').innerHTML = cheatText;
+        document.getElementById('vipLifeComment').innerText = result.vip_life_comment;
+    }
+
+    function incrementUsage() {
+        const today = new Date().toDateString();
+        const usageData = JSON.parse(localStorage.getItem('potato_ai_usage') || '{}');
+        usageData.date = today;
+        usageData.count = (usageData.count || 0) + 1;
+        localStorage.setItem('potato_ai_usage', JSON.stringify(usageData));
+    }
+
+    function watchAd() {
+        const btn = document.querySelector('.btn-ad');
+        const originalText = btn.innerText;
+        btn.innerText = "📺 廣告播放中... (3s)";
+        btn.disabled = true;
+        setTimeout(() => {
+            alert("✅ 獲得免費 AI 次數！");
+            document.getElementById('paywall-modal').style.display = 'none';
+            btn.innerText = originalText;
+            btn.disabled = false;
+            callCloudAI();
+        }, 3000);
+    }
+
+    function buyPro() {
+        if(confirm("【模擬】確認支付 NT$99 購買終身 VIP？")) {
+            isVipUser = true;
+            localStorage.setItem('potato_is_vip', 'true');
+            alert("🎉 升級成功！");
+            document.getElementById('paywall-modal').style.display = 'none';
+            callCloudAI();
         }
     }
 
-    // IG 下載功能 (只截取白卡) / 完整下載功能 (下載兩張卡)
     function downloadImage(mode) {
         if (mode === 'ig') {
-            // IG: 只下載白卡 (captureArea)
             html2canvas(document.getElementById('captureArea'), { scale: 2, backgroundColor: "#fffdf5" }).then(saveCanvas);
         } else {
-            // Full: 下載整個結果區域 (白卡+黑金卡)
-            // 暫時確保黑金卡是顯示的
             const wasHidden = document.getElementById('vipCard').style.display === 'none';
             if(wasHidden) document.getElementById('vipCard').style.display = 'block';
-            
-            // 複製整個 page-result 內容來截圖
             const element = document.getElementById('page-result');
             html2canvas(element, { scale: 2, backgroundColor: "#f0f2f5" }).then(canvas => {
                 saveCanvas(canvas);
@@ -400,15 +483,12 @@
             });
         }
     }
-
     function saveCanvas(canvas) {
         const link = document.createElement('a');
         link.download = `運勢_${new Date().getTime()}.png`;
         link.href = canvas.toDataURL('image/png');
         link.click();
     }
-    
-    // Helper functions
     function getZodiacSign(d){const m=d.getMonth()+1;const dy=d.getDate();if((m==1&&dy>=20)||(m==2&&dy<=18))return"水瓶座 ♒";if((m==2&&dy>=19)||(m==3&&dy<=20))return"雙魚座 ♓";if((m==3&&dy>=21)||(m==4&&dy<=19))return"牡羊座 ♈";if((m==4&&dy>=20)||(m==5&&dy<=20))return"金牛座 ♉";if((m==5&&dy>=21)||(m==6&&dy<=21))return"雙子座 ♊";if((m==6&&dy>=22)||(m==7&&dy<=22))return"巨蟹座 ♋";if((m==7&&dy>=23)||(m==8&&dy<=22))return"獅子座 ♌";if((m==8&&dy>=23)||(m==9&&dy<=22))return"處女座 ♍";if((m==9&&dy>=23)||(m==10&&dy<=23))return"天秤座 ♎";if((m==10&&dy>=24)||(m==11&&dy<=22))return"天蠍座 ♏";if((m==11&&dy>=23)||(m==12&&dy<=21))return"射手座 ♐";return"摩羯座 ♑";}
     function showPage(pageId) { document.querySelectorAll('.page').forEach(el => el.style.display = 'none'); document.getElementById(pageId).style.display = 'block'; }
     function updateDateDisplay() { const d = new Date(); document.getElementById('dateDisplayInput').innerText = `${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()}`; }
