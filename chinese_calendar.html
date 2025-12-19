@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>廢話農民曆 v1.25 (完美修復版)</title>
+    <title>廢話農民曆 v1.26 (PWA修復版)</title>
     <link rel="manifest" href="manifest.json">
+    
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#2c3e50">
@@ -137,12 +139,10 @@
                 <div class="vip-content" id="vipContent">
                     <p style="font-weight:bold; color:#f1c40f; margin:10px 0 5px 0;">📊 今日戰力指數</p>
                     <div id="powerBars"></div>
-
                     <p style="font-weight:bold; color:#f1c40f; margin:15px 0 5px 0;">⚡ 今日作弊代碼</p>
                     <div style="background:rgba(255,255,255,0.1); padding:10px; border-radius:8px; font-size:13px;">
                         <p id="vipCheatSheet">...</p>
                     </div>
-
                     <p style="font-weight:bold; color:#f1c40f; margin:15px 0 5px 0;">🔮 八字命盤</p>
                     <div class="bazi-grid">
                         <div class="bazi-col"><div class="bazi-label">年</div><div class="bazi-val" id="bazi-y"></div></div>
